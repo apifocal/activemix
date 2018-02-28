@@ -1,2 +1,2 @@
 # activemq-mix
-Apache ActiveMQ Management Tools
+Apache ActiveMQ Governance Tools
