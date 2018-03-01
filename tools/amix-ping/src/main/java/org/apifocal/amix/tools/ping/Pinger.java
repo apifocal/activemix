@@ -41,7 +41,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class Pinger {
 
     private final long DEFAULT_TTL = 120000; // milliseconds
-    private final long DEFAULT_THROTTLE = 20; // milliseconds
+    private final int DEFAULT_THROTTLE = 20; // milliseconds
     // TODO: add undocumented feature to force throttle to 0 to flood broker?
 
     private final String url;
@@ -57,6 +57,7 @@ public class Pinger {
     private boolean async = false;
     private int interval = 0;
     private int count = 1;
+    private int throttle = DEFAULT_THROTTLE;
     private int rx = 0;
     private CountDownLatch counter = new CountDownLatch(1);
     private AtomicBoolean green = new AtomicBoolean(true);
@@ -101,6 +102,12 @@ public class Pinger {
         this.interval = interval;
     }
 
+    public void noThrottle(boolean nothrottle) {
+        if (nothrottle) {
+            this.async = true;
+            this.throttle = 0;
+        }
+    }
 
     public void start() throws Exception {
         factory =  new ActiveMQConnectionFactory(url);
@@ -124,7 +131,7 @@ public class Pinger {
                 Message message;
                 try {
                     int tx = 0;
-                    long delay = interval > 0 ? interval * 1000 : DEFAULT_THROTTLE;
+                    long delay = interval > 0 ? interval * 1000 : throttle;
                     for(tx = 0; tx == 0 || !counter.await(delay, TimeUnit.MILLISECONDS); ) {
                         if (async || green.get()) { // received, send another one
                             green.set(false);
