@@ -39,13 +39,6 @@ limitations under the License.
         <amix.broker.path>src/test/resources/${amix.broker.name}</amix.broker.path>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-    </dependencies>
-
     <build />
 
     <profiles>
@@ -63,6 +56,22 @@ limitations under the License.
                             <fork>false</fork>
                         </configuration>
                         <dependencies>
+                            <dependency>
+                                <groupId>org.apache.activemq</groupId>
+                                <artifactId>activemq-client</artifactId>
+                                <version>${activemq.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.activemq</groupId>
+                                <artifactId>activemq-broker</artifactId>
+                                <version>${activemq.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.activemq</groupId>
+                                <artifactId>activemq-jaas</artifactId>
+                                <version>${activemq.version}</version>
+                            </dependency>
+
                             <dependency>
                                 <groupId>org.slf4j</groupId>
                                 <artifactId>slf4j-api</artifactId>
