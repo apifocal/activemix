@@ -36,14 +36,14 @@ limitations under the License.
 
     <properties>
         <amix.broker.name>minimal.xml</amix.broker.name>
-        <amix.broker.path>src/test/resources/${amix.broker.name}</amix.broker.path>
+        <amix.broker.config>src/test/resources/${amix.broker.name}.xml</amix.broker.config>
     </properties>
 
     <build />
 
     <profiles>
         <profile>
-            <id>jms.broker</id>
+            <id>jms-broker</id>
             <build>
                 <defaultGoal>test</defaultGoal>
                 <plugins>
@@ -52,7 +52,7 @@ limitations under the License.
                         <artifactId>activemq-maven-plugin</artifactId>
                         <version>${activemq.version}</version>
                         <configuration>
-                            <configUri>xbean:file:${amix.broker.path}</configUri>
+                            <configUri>xbean:file:${amix.broker.config}</configUri>
                             <fork>false</fork>
                         </configuration>
                         <dependencies>
