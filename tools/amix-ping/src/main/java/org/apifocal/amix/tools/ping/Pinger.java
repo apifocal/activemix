@@ -39,7 +39,11 @@ import org.apache.commons.lang3.RandomStringUtils;
  * TODO: Doc
  */
 public class Pinger {
-    
+
+    private final long DEFAULT_TTL = 120000; // milliseconds
+    private final long DEFAULT_THROTTLE = 20; // milliseconds
+    // TODO: add undocumented feature to force throttle to 0 to flood broker?
+
     private final String url;
     private final String dn;
     private String user;
@@ -113,21 +117,23 @@ public class Pinger {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         Destination d = createDestination(session, dn);
         final MessageProducer producer = session.createProducer(d);
-        producer.setTimeToLive(120000); // no point in keeping pings longer than 2 min
+        producer.setTimeToLive(DEFAULT_TTL); // no point in keeping pings too longer at broker
 
         executor.execute(new Runnable() {
             public void run() {
                 Message message;
                 try {
                     int tx = 0;
-                    long delay = interval > 0 ? interval * 1000 : 20; // 
+                    long delay = interval > 0 ? interval * 1000 : DEFAULT_THROTTLE;
                     for(tx = 0; tx == 0 || !counter.await(delay, TimeUnit.MILLISECONDS); ) {
                         if (async || green.get()) { // received, send another one
                             green.set(false);
                             message = session.createTextMessage(data);
                             message.setJMSTimestamp(System.currentTimeMillis());
                             producer.send(message);
-                            tx++; // only increment if message sent
+                            if (++tx >= count) { // only increment if message sent
+                                break;
+                            }
                         }
                     }
                     System.out.println("Completed: " + tx + " messages sent");

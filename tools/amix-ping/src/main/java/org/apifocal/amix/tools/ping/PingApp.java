@@ -33,7 +33,7 @@ import org.apache.commons.cli.ParseException;
  */
 public class PingApp {
 
-    private static final String DEFAULT_PING_DESTINATION = "queue://amix.ping";
+    private static final String DEFAULT_PING_DESTINATION = "queue://jms.ping";
 
     private static final Option OPTION_HELP = Option
         .builder("h").longOpt("help").desc("Display usage information").hasArg(false).build();
