@@ -34,6 +34,11 @@ limitations under the License.
     <name>ActiveMQ Mix - Test Brokers</name>
     <description>ActiveMQ test brokers running standalone (using activemq-maven-plugin)</description>
 
+    <properties>
+        <amix.broker.name>minimal.xml</amix.broker.name>
+        <amix.broker.path>src/test/resources/${amix.broker.name}</amix.broker.path>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -41,8 +46,7 @@ limitations under the License.
         </dependency>
     </dependencies>
 
-    <build>
-    </build>
+    <build />
 
     <profiles>
         <profile>
@@ -55,7 +59,7 @@ limitations under the License.
                         <artifactId>activemq-maven-plugin</artifactId>
                         <version>${activemq.version}</version>
                         <configuration>
-                            <configUri>xbean:file:src/test/resources/minimal.xml</configUri>
+                            <configUri>xbean:file:${amix.broker.path}</configUri>
                             <fork>false</fork>
                         </configuration>
                         <dependencies>
