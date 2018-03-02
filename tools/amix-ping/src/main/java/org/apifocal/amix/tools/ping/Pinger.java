@@ -40,7 +40,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  */
 public class Pinger {
 
-    private final long DEFAULT_TTL = 120000; // milliseconds
+    private final int DEFAULT_TTL = 120000; // milliseconds
     private final int DEFAULT_THROTTLE = 20; // milliseconds
     // TODO: add undocumented feature to force throttle to 0 to flood broker?
 
@@ -57,6 +57,7 @@ public class Pinger {
     private boolean async = false;
     private int interval = 0;
     private int count = 1;
+    private int ttl = DEFAULT_TTL;
     private int throttle = DEFAULT_THROTTLE;
     private int rx = 0;
     private CountDownLatch counter = new CountDownLatch(1);
@@ -98,6 +99,10 @@ public class Pinger {
         counter = new CountDownLatch(this.count);
     }
 
+    public void setTtl(int ttl) {
+        this.ttl = ttl * 1000; // ms
+    }
+
     public void setInterval(int interval) {
         this.interval = interval;
     }
@@ -124,7 +129,7 @@ public class Pinger {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         Destination d = createDestination(session, dn);
         final MessageProducer producer = session.createProducer(d);
-        producer.setTimeToLive(DEFAULT_TTL); // no point in keeping pings too longer at broker
+        producer.setTimeToLive(ttl); // no point in keeping pings too longer at broker
 
         executor.execute(new Runnable() {
             public void run() {

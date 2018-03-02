@@ -35,7 +35,7 @@ limitations under the License.
     <description>ActiveMQ test brokers running standalone (using activemq-maven-plugin)</description>
 
     <properties>
-        <amix.broker.name>minimal.xml</amix.broker.name>
+        <amix.broker.name>minimal</amix.broker.name>
         <amix.broker.config>src/test/resources/${amix.broker.name}.xml</amix.broker.config>
     </properties>
 

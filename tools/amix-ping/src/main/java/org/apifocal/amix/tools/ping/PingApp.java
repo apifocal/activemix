@@ -53,6 +53,8 @@ public class PingApp {
         .builder("a").longOpt("async").desc("Send next ping before receiving reply").hasArg(false).build();
     private static final Option OPTION_NOTHROTTLE = Option
         .builder().longOpt("no-throttle").desc("[NO HELP] Saturate broker; use with care!").build();
+    private static final Option OPTION_TTL = Option
+            .builder().longOpt("ttl").desc("[NO HELP] Message expiration time").hasArg(true).argName("ttl").build();
 
     private static final Options OPTIONS = new Options();
     private static final Option[] OPTIONS_LIST = {
@@ -64,6 +66,7 @@ public class PingApp {
             OPTION_INTERVAL,
             OPTION_ASYNC,
             OPTION_NOTHROTTLE,
+            OPTION_TTL,
     };
     private static final String OPTIONS_FOOTER = "\n"
         + " broker-url             JMS connection URL\n"
@@ -121,6 +124,9 @@ public class PingApp {
         }
         if (cli.hasOption("i")) {
             pinger.setInterval(Integer.parseInt(cli.getOptionValue("i")));
+        }
+        if (cli.hasOption("ttl")) {
+            pinger.setTtl(Integer.parseInt(cli.getOptionValue("ttl")));
         }
         pinger.setAsync(cli.hasOption("a"));
         pinger.noThrottle(cli.hasOption("no-throttle"));
