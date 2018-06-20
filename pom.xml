@@ -66,6 +66,7 @@ limitations under the License.
         <karaf.versionRange>[${karaf.version},4.2)</karaf.versionRange>
         <log4j.version>1.2.17</log4j.version>
         <logback.version>1.1.3</logback.version>
+        <metrics.version>4.0.2</metrics.version>
         <mockito.version>2.0.44-beta</mockito.version>
         <osgi.annotation.version>6.0.0</osgi.annotation.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
@@ -83,6 +84,7 @@ limitations under the License.
 
     <modules>
         <module>tools</module>
+        <module>plugins</module>
     </modules>
 
     <dependencyManagement>
@@ -181,6 +183,11 @@ limitations under the License.
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-core</artifactId>
+                <version>${activemq.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
@@ -323,6 +330,24 @@ limitations under the License.
                 <artifactId>cxf-rt-transports-local</artifactId>
                 <version>${cxf.version}</version>
             </dependency>
+
+
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>${metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-jvm</artifactId>
+                <version>${metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-servlets</artifactId>
+                <version>${metrics.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.karaf</groupId>
                 <artifactId>apache-karaf</artifactId>
