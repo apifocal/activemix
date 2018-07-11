@@ -18,8 +18,10 @@ limitations under the License.
   xmlns="http://www.springframework.org/schema/beans"
   xmlns:spr="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:silkmq-metrics="http://silkmq.com/schema/metrics"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+  http://silkmq.com/schema/metrics http://silkmq.com/schema/metrics.xsd">
 
     <!-- Allows us to use system properties as variables in this configuration file -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -40,9 +42,7 @@ limitations under the License.
     <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" dataDirectory="${activemq.data}">
         <plugins>
             <!-- metrics -->
-		    <spr:bean id="metrics" class="org.apifocal.amix.plugins.metrics.MetricsPlugin">
-		      <spr:constructor-arg ref="metricRegistry" />
-		    </spr:bean>
+            <silkmq-metrics:metrics metricRegistry="#metricRegistry" />
         </plugins>
         <destinationPolicy>
             <policyMap>
