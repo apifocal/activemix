@@ -19,9 +19,25 @@ import com.codahale.metrics.MetricRegistry;
 import org.apache.activemq.broker.Broker;
 import org.apache.activemq.broker.BrokerPlugin;
 
+/**
+ * A metrics plugin - attaches codehale/dropwizard statistics to activemq.
+ *
+ * After applying this plugin tracking of connections, destinations and other interactions will be made.
+ *
+ * @org.apache.xbean.XBean element="metrics"
+ */
 public class MetricsPlugin implements BrokerPlugin {
+
+    /**
+     * A metric registry which is used to attach meters.
+     */
     private final MetricRegistry metricRegistry;
 
+    /**
+     * Create new plugin.
+     *
+     * @param metricRegistry Metric registry to use for putting stats.
+     */
     public MetricsPlugin(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
