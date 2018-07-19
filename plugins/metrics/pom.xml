@@ -28,8 +28,9 @@ limitations under the License.
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>org.apifocal.amix.plugins</groupId>
     <artifactId>metrics</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <name>ActiveMQ Mix - Plugins - Metrics</name>
     <description>Broker plugin which exposes additional diagnostics via dropwizard metrics.</description>
@@ -57,28 +58,6 @@ limitations under the License.
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <artifactSet>
-                        <includes>
-                            <include>io.dropwizard.metrics:*</include>
-                        </includes>
-                    </artifactSet>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>shade</id>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.xbean</groupId>
                 <artifactId>maven-xbean-plugin</artifactId>
