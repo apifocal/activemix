@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2017-2018 apifocal LLC. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<features name="${project.artifactId}-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+
+    <repository>mvn:org.apache.karaf.features/enterprise/${karaf.version}/xml/features</repository>
+    <repository>mvn:org.apache.karaf.features/spring/${karaf.version}/xml/features</repository>
+    <repository>mvn:org.apache.activemq/activemq-karaf/${activemq.version}/xml/features</repository>
+
+    <feature name="amix-plugin-metrics" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics">
+        <feature prerequisite="true">wrap</feature>
+        <feature>aries-blueprint</feature>
+        <feature>activemq-blueprint</feature>
+        <feature>http</feature>
+        <feature>shell</feature>
+        <feature>activemq</feature>
+
+        <bundle >mvn:com.fasterxml.jackson.core/jackson-annotations/2.9.0</bundle>
+        <bundle >mvn:com.fasterxml.jackson.core/jackson-core/2.9.0</bundle>
+        <bundle >mvn:com.fasterxml.jackson.core/jackson-databind/2.9.0</bundle>
+
+        <bundle>mvn:io.dropwizard.metrics/metrics-core/${metrics.version}</bundle>
+        <bundle>mvn:io.dropwizard.metrics/metrics-healthchecks/${metrics.version}</bundle>
+        <bundle>mvn:io.dropwizard.metrics/metrics-json/${metrics.version}</bundle>
+        <bundle>mvn:io.dropwizard.metrics/metrics-jvm/${metrics.version}</bundle>
+        <bundle>wrap:mvn:com.papertrail/profiler/1.0.2</bundle>
+
+        <bundle>mvn:io.dropwizard.metrics/metrics-servlets/${metrics.version}</bundle>
+        <bundle start-level="50">mvn:org.apifocal.amix.plugins/metrics/${project.version}</bundle>
+    </feature>
+
+</features>
