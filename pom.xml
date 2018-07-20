@@ -95,6 +95,7 @@ limitations under the License.
     </properties>
 
     <modules>
+        <module>jaas</module>
         <module>tools</module>
         <module>plugins</module>
         <module>xbean</module>
