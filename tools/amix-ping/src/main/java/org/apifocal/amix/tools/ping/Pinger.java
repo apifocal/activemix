@@ -59,10 +59,12 @@ public class Pinger {
     private int count = 1;
     private int ttl = DEFAULT_TTL;
     private int throttle = DEFAULT_THROTTLE;
+    private int tx = 0;
     private int rx = 0;
     private CountDownLatch counter = new CountDownLatch(1);
     private AtomicBoolean green = new AtomicBoolean(true);
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private StatsCollector collector = new PrintStatsCollector();
 
     public Pinger(String url, String dn) {
         this.url = url;
@@ -135,7 +137,6 @@ public class Pinger {
             public void run() {
                 Message message;
                 try {
-                    int tx = 0;
                     long delay = interval > 0 ? interval * 1000 : throttle;
                     for(tx = 0; tx == 0 || !counter.await(delay, TimeUnit.MILLISECONDS); ) {
                         if (async || green.get()) { // received, send another one
@@ -170,8 +171,7 @@ public class Pinger {
                 try {
                     if (message instanceof TextMessage) {
                         long time = message.getJMSTimestamp();
-                        System.out.printf("ping: destination=%s, size=%d bytes, time=%d ms\n",
-                            dn, data.length(), System.currentTimeMillis() - time);
+                        collector.collect(time, System.currentTimeMillis());
                         green.set(true);
                     }
                 } catch (JMSException e) {
