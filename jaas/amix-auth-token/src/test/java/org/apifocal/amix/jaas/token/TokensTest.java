@@ -94,7 +94,7 @@ public class TokensTest {
         }
 
         String privkey = Resources.toString(Resources.getResource("./ssh/id_dsa-bob"), Charsets.UTF_8);
-        KeyPair keyPair = getKeyPair(privkey);
+        KeyPair keyPair = Tokens.readKeyPair(privkey);
 
         Assert.assertNotNull(keyPair);
         Assert.assertNotNull(keyPair.getPrivate());
@@ -116,7 +116,7 @@ public class TokensTest {
     @Test
     public void testSignToken() throws Exception {
         String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
-        KeyPair kp = getKeyPair(privkey);
+        KeyPair kp = Tokens.readKeyPair(privkey);
         LOG.info("KP ALGO: {}", kp.getPublic().getAlgorithm());
         LOG.info("KP TYPE: {}", kp.getPrivate().getClass().getName());
         RSAPrivateKey privateKey = (RSAPrivateKey)kp.getPrivate();
@@ -150,15 +150,4 @@ public class TokensTest {
 
     }
 
-    private KeyPair getKeyPair(String path) throws Exception {
-        Security.addProvider(BouncyCastleProviderSingleton.getInstance());
-        PEMParser pemParser = new PEMParser(new InputStreamReader(new ByteArrayInputStream(path.getBytes(StandardCharsets.UTF_8))));
-        PEMKeyPair pemKeyPair = (PEMKeyPair)pemParser.readObject();
-        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-        KeyPair keyPair = converter.getKeyPair(pemKeyPair);
-        pemParser.close();
-        Security.removeProvider("BC");
-
-        return keyPair;
-    }
 }

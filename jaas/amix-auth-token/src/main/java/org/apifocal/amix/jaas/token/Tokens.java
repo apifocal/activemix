@@ -15,13 +15,24 @@
  */
 package org.apifocal.amix.jaas.token;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyPair;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +42,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jose.crypto.bc.BouncyCastleProviderSingleton;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
@@ -40,7 +52,32 @@ import com.nimbusds.jwt.SignedJWT;
 public final class Tokens {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tokens.class);
-    
+
+    public static KeyPair readKeyPair(String key) throws Exception {
+        return readKeyPair(new InputStreamReader(new ByteArrayInputStream(key.getBytes(StandardCharsets.UTF_8))));
+    }
+
+    public static KeyPair readKeyPair(Path path) throws Exception {
+        return readKeyPair(Files.newBufferedReader(path));
+    }
+
+    public static KeyPair readKeyPair(final Reader reader) throws Exception {
+        // TODO: not very clean package dependencies, could use some refactoring
+        PEMParser pemParser = null;
+        try {
+            Security.addProvider(BouncyCastleProviderSingleton.getInstance());
+            pemParser = new PEMParser(reader);
+            PEMKeyPair pemKeyPair = (PEMKeyPair)pemParser.readObject();
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+            return converter.getKeyPair(pemKeyPair);
+        } finally {
+            if (pemParser != null) {
+                pemParser.close();
+            }
+            Security.removeProvider("BC");
+        }
+    }
+
     public static Map<String, Object> processToken(TokenValidationContext context, String token) {
         // TODO: we can do better than hardocoding...
         
