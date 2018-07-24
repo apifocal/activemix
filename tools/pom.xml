@@ -37,6 +37,7 @@ limitations under the License.
 
     <modules>
         <module>amix-ping</module>
+        <module>amix-token</module>
         <module>test-brokers</module>
     </modules>
 
