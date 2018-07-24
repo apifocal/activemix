@@ -35,6 +35,15 @@ limitations under the License.
     <name>ActiveMQ Mix - Plugins - Metrics</name>
     <description>Broker plugin which exposes additional diagnostics via dropwizard metrics.</description>
 
+    <properties>
+        <osgi.import>
+            org.apache.xbean.blueprint.context.impl;resolution:=optional,
+            org.apache.xbean.spring.context.v2;resolution:=optional,
+            org.springframework.beans.factory.xml;resolution:=optional,
+            *
+        </osgi.import>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.activemq</groupId>

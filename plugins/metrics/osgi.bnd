@@ -1,6 +1,0 @@
-# Exported package root
-Export-Package: org.apifocal.amix.plugins.metrics.*
-
-# Base definitions
--include: ${maven.multiModuleProjectDirectory}/osgi.bnd
-

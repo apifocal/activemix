@@ -1,5 +1,0 @@
-# Common definitions
-Import-Package: *
-
-# Cleanup manifest by removing thins which are unnecessary or cause more troubles than benefits.
--removeheaders: Import-Service, Export-Service, Include-Resource

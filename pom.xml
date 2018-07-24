@@ -82,6 +82,15 @@ limitations under the License.
         <xmlunit.version>2.2.0</xmlunit.version>
 
         <maven-bundle-plugin.version>3.5.1</maven-bundle-plugin.version>
+
+        <bundle.namespace>${project.groupId}.${project.artifactId}</bundle.namespace>
+        <osgi.import>
+            !${bundle.namespace},*
+        </osgi.import>
+        <osgi.export>
+            !${bundle.namespace}.internal.*,
+            ${bundle.namespace}.*
+        </osgi.export>
     </properties>
 
     <modules>
@@ -546,7 +555,9 @@ limitations under the License.
                     <version>${maven-bundle-plugin.version}</version>
                     <configuration>
                         <instructions>
-                            <_import>osgi.bnd</_import>
+                            <Import-Package>${osgi.import}</Import-Package>
+                            <Export-Package>${osgi.export}</Export-Package>
+                            <_removeHeaders>Import-Service, Export-Service, Include-Resource, Embed-Dependency</_removeHeaders>
                         </instructions>
                     </configuration>
                 </plugin>
