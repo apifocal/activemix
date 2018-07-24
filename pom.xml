@@ -56,6 +56,7 @@ limitations under the License.
         <commons.io.version>2.5</commons.io.version>
         <commons.validator.version>1.6</commons.validator.version>
         <cxf.version>3.2.1</cxf.version>
+        <xbean.version>4.2</xbean.version>
 
         <guava.version>18.0</guava.version>
         <jackson.version>2.8.10</jackson.version>
@@ -96,6 +97,7 @@ limitations under the License.
     <modules>
         <module>tools</module>
         <module>plugins</module>
+        <module>xbean</module>
         <module>features</module>
     </modules>
 
@@ -105,6 +107,18 @@ limitations under the License.
                 <groupId>org.apifocal.amix.plugins</groupId>
                 <artifactId>metrics</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apifocal.amix.xbean</groupId>
+                <artifactId>xbean-spring</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apifocal.amix</groupId>
+                <artifactId>features</artifactId>
+                <version>${project.version}</version>
+                <classifier>features</classifier>
+                <type>xml</type>
             </dependency>
 
             <dependency>
@@ -364,6 +378,22 @@ limitations under the License.
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-servlets</artifactId>
                 <version>${metrics.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.xbean</groupId>
+                <artifactId>xbean-finder</artifactId>
+                <version>${xbean.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xbean</groupId>
+                <artifactId>xbean-blueprint</artifactId>
+                <version>${xbean.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xbean</groupId>
+                <artifactId>xbean-spring</artifactId>
+                <version>${xbean.version}</version>
             </dependency>
 
             <dependency>
