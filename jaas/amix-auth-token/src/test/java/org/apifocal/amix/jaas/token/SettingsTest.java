@@ -15,13 +15,8 @@
  */
 package org.apifocal.amix.jaas.token;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
