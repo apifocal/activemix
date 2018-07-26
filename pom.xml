@@ -116,6 +116,21 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apifocal.amix.xbean</groupId>
+                <artifactId>xbean-blueprint</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apifocal.amix.tools</groupId>
+                <artifactId>amix-ping</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apifocal.amix.tools</groupId>
+                <artifactId>amix-token</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apifocal.amix</groupId>
                 <artifactId>features</artifactId>
                 <version>${project.version}</version>
