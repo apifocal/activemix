@@ -41,16 +41,15 @@ limitations under the License.
     </feature>
 
     <feature name="amix-plugin-metrics-spring" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics with spring support">
-        <feature>amix-plugin-metrics</feature>
-        <feature>aries-blueprint</feature>
-        <feature>activemq-blueprint</feature>
         <bundle>mvn:org.apifocal.amix.xbean/xbean-spring/${project.version}</bundle>
+        <feature>amix-plugin-metrics</feature>
     </feature>
 
     <feature name="amix-plugin-metrics-blueprint" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics with blueprint support">
-        <feature>amix-plugin-metrics</feature>
         <feature>aries-blueprint</feature>
         <feature>activemq-blueprint</feature>
+        <bundle>mvn:org.apifocal.amix.xbean/xbean-blueprint/${project.version}</bundle>
+        <feature>amix-plugin-metrics</feature>
     </feature>
 
 </features>

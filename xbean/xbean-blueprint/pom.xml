@@ -29,24 +29,23 @@ limitations under the License.
     </parent>
 
     <groupId>org.apifocal.amix.xbean</groupId>
-    <artifactId>xbean-spring</artifactId>
+    <artifactId>xbean-blueprint</artifactId>
     <packaging>bundle</packaging>
 
-    <name>ActiveMQ Mix - XBean - Spring</name>
-    <description>XBean Spring put on Spring 4.3.x.</description>
+    <name>ActiveMQ Mix - XBean - Blueprint</name>
+    <description>XBean Blueprint without dependency on aries internals.</description>
 
     <properties>
-        <bundle.namespace>org.apache.xbean.spring.context</bundle.namespace>
+        <bundle.namespace>org.apache.xbean.blueprint</bundle.namespace>
         <osgi.import>
             !${bundle.namespace}.*,
             !com.thoughtworks.qdox.*,
             !org.apache.tools.ant.*,
-            org.springframework.web.*;resolution:=optional;version="[4.3,5)",
-            org.springframework.*;version="[4.3,5)",
             *
         </osgi.import>
         <osgi.export>
             !${bundle.namespace}.generator.*,
+            !${bundle.namespace}.cm.*,
             ${bundle.namespace}.*
         </osgi.export>
         <osgi.private>${bundle.namespace}</osgi.private>
@@ -55,11 +54,7 @@ limitations under the License.
     <dependencies>
         <dependency>
             <groupId>org.apache.xbean</groupId>
-            <artifactId>xbean-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
+            <artifactId>xbean-blueprint</artifactId>
         </dependency>
     </dependencies>
 

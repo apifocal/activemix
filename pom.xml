@@ -92,6 +92,7 @@ limitations under the License.
             !${bundle.namespace}.internal.*,
             ${bundle.namespace}.*
         </osgi.export>
+        <osgi.private>${bundle.namespace}.internal.*</osgi.private>
     </properties>
 
     <modules>
@@ -587,7 +588,8 @@ limitations under the License.
                         <instructions>
                             <Import-Package>${osgi.import}</Import-Package>
                             <Export-Package>${osgi.export}</Export-Package>
-                            <_removeHeaders>Import-Service, Export-Service, Include-Resource, Embed-Dependency</_removeHeaders>
+                            <Private-Package>${osgi.private}</Private-Package>
+                            <_removeHeaders>Import-Service, Export-Service, Include-Resource, Private-Package, Embed-Dependency</_removeHeaders>
                         </instructions>
                     </configuration>
                 </plugin>
