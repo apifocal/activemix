@@ -92,7 +92,6 @@ public class TokensTest {
         LOG.info("FINGER: {} {}", fingerprint.length(), fingerprint);
     }
     
-
     @Test
     public void testSignToken() throws Exception {
         String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
@@ -106,7 +105,7 @@ public class TokensTest {
             .subject("user")
             // .audience("project")
             .issueTime(new Date())
-            .expirationTime(Date.from(ZonedDateTime.now().plusMonths(1).toInstant()))
+            .expirationTime(Date.from(ZonedDateTime.now().plusMonths(3).toInstant()))
             .issuer("urn:bob")
             .build();
         LOG.info("CLAIMS: {}", claimsSetOne.toJSONObject());
@@ -127,7 +126,20 @@ public class TokensTest {
 
         JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey)publix);
         Assert.assertTrue(signedJWT.verify(verifier));
+    }
 
+    @Test
+    public void testCreateToken() throws Exception {
+        String user = "bob";
+        String app = "hello-world";
+        JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
+        Tokens.subject(claims, user);
+        Tokens.issuer(claims, user);
+
+        String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
+        String token = Tokens.createToken(claims.build(), privkey);
+        Assert.assertNotNull(token);
+        LOG.info("TOKEN [{}]: {}", token.length(), token);
     }
 
 }
