@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyPair;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +35,10 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Strings;
 import com.nimbusds.jose.Header;
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
@@ -52,6 +56,32 @@ public final class Tokens {
 
     public static KeyPair readKeyPair(Path path) throws Exception {
         return TokensImpl.readKeyPair(Files.newBufferedReader(path));
+    }
+
+    public static void subject(final JWTClaimsSet.Builder builder, String value) {
+        Optional.ofNullable(value).map(s -> builder.subject(s)).orElseThrow(IllegalArgumentException::new);
+    }
+
+    public static void issuer(final JWTClaimsSet.Builder builder, String value) {
+        Optional.ofNullable(value).map(s -> builder.issuer(s)).orElseThrow(IllegalArgumentException::new);
+    }
+
+    public static String createToken(final JWTClaimsSet claims, String privkey) {
+        SignedJWT signedJWT = null;
+        try {
+            KeyPair kp = Tokens.readKeyPair(privkey);
+            if (!"RSA".equals(kp.getPublic().getAlgorithm())) {
+                // TODO: LOG, complain...
+                return null;
+            }
+            RSAPrivateKey rsaKey = kp.getPrivate() instanceof RSAPrivateKey ? (RSAPrivateKey)kp.getPrivate() : null;
+            signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claims);
+            signedJWT.sign(new RSASSASigner(rsaKey));
+            return signedJWT.serialize();
+        } catch (Exception e) {
+            // LOG e.getLocalizedMessage()
+        }
+        return null;
     }
 
     public static Map<String, Object> processToken(TokenValidationContext context, String token) {
