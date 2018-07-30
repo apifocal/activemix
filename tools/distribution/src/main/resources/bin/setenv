@@ -1,0 +1,31 @@
+#!/bin/sh
+# handle specific scripts; the SCRIPT_NAME is exactly the name of the amix
+# script: client, instance, shell, start, status, stop, amix
+#
+# if [ "${AMIX_SCRIPT}" == "SCRIPT_NAME" ]; then
+#   Actions go here...
+# fi
+
+#
+# general settings which should be applied for all scripts go here; please keep
+# in mind that it is possible that scripts might be executed more than once, e.g.
+# in example of the start script where the start script is executed first and the
+# amix script afterwards.
+#
+
+#
+# The following section shows the possible configuration options for the default
+# amix scripts
+#
+# export JAVA_HOME # Location of Java installation
+# export JAVA_MIN_MEM # Minimum memory for the JVM
+# export JAVA_MAX_MEM # Maximum memory for the JVM
+# export JAVA_PERM_MEM # Minimum perm memory for the JVM
+# export JAVA_MAX_PERM_MEM # Maximum perm memory for the JVM
+# export EXTRA_JAVA_OPTS # Additional JVM options
+# export AMIX_HOME # amix home folder
+# export AMIX_SYSTEM_OPTS # First citizen amix options
+# export AMIX_OPTS # Additional available amix options
+# export AMIX_DEBUG # Enable debug mode
+# export AMIX_REDIRECT # Enable/set the std/err redirection when using bin/start
+# export AMIX_NOROOT # Prevent execution as root if set to true
