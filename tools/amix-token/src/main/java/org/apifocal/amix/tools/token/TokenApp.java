@@ -15,21 +15,15 @@
  */
 package org.apifocal.amix.tools.token;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -41,15 +35,7 @@ import org.apache.commons.cli.ParseException;
 import org.apifocal.amix.jaas.token.Tokens;
 
 import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-
-import net.minidev.json.JSONObject;
 
 /**
  * JMS Token Generation Utility for Apache ActiveMQ
@@ -107,41 +93,23 @@ public class TokenApp {
     }
 
     public static String createToken(final CommandLine cli) {
-    	String user = cli.getOptionValue("u");
-    	String issuer = cli.getOptionValue("i");
-    	String app =  cli.getOptionValue("a");
-    	String key =  cli.getOptionValue("k");
+    	JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
+    	Tokens.subject(claims, Objects.requireNonNull(cli.getOptionValue("u"), "Missing option 'user'"));
+    	Tokens.issuer(claims, Objects.requireNonNull(cli.getOptionValue("i"), "Missing option 'issuer'"));
 
+    	Objects.requireNonNull("");
+    	String key =  cli.getOptionValue("k");
     	Path sk = Paths.get(key);
     	if (!Files.exists(sk) || !Files.isRegularFile(sk)) {
     		// TODO: throw an exception
     		return null;
     	}
-
-    	JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder()
-            .subject(user)
-            .issuer("urn:" + issuer)
-            .issueTime(new Date());
-    	claims = app != null ? claims.audience(app) : claims;
-
-    	// now let's sign it...
-    	SignedJWT signedJWT = null;
     	try {
-			String privkey = new String(Files.readAllBytes(sk), Charsets.UTF_8);
-			KeyPair kp = Tokens.readKeyPair(privkey);
-			if (!"RSA".equals(kp.getPublic().getAlgorithm())) {
-				// TODO: LOG, complain...
-				return null;
-			}
-			RSAPrivateKey privateKey = kp.getPrivate() instanceof RSAPrivateKey ? (RSAPrivateKey)kp.getPrivate() : null;
-	        JWSSigner signer = new RSASSASigner(privateKey);
-	        signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claims.build());
+    		return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8));
 		} catch (Exception e) {
 			System.out.print(e.getLocalizedMessage());
-			return null;
 		}
-
-    	return signedJWT.serialize();
+    	return null;
     }
 
     public static CommandLine parse(String[] args) throws ParseException {
