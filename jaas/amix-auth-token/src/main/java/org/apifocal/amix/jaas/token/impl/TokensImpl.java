@@ -15,13 +15,19 @@
  */
 package org.apifocal.amix.jaas.token.impl;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.security.KeyPair;
 import java.security.Security;
+import java.util.Objects;
 
+import org.apifocal.amix.jaas.token.PasswordProvider;
+import org.bouncycastle.openssl.PEMDecryptorProvider;
+import org.bouncycastle.openssl.PEMEncryptedKeyPair;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,21 +40,29 @@ public final class TokensImpl {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokensImpl.class);
 
-    public static KeyPair readKeyPair(final Reader reader) throws Exception {
+    public static KeyPair readKeyPair(final Reader reader, PasswordProvider password) throws Exception {
         // TODO: not very clean package dependencies, could use some refactoring
         PEMParser pemParser = null;
         try {
             Security.addProvider(BouncyCastleProviderSingleton.getInstance());
             pemParser = new PEMParser(reader);
-            PEMKeyPair pemKeyPair = (PEMKeyPair)pemParser.readObject();
-            JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-            return converter.getKeyPair(pemKeyPair);
+            Object pem = pemParser.readObject();
+            PEMKeyPair kp = (pem instanceof PEMEncryptedKeyPair) 
+                ? decryptKey((PEMEncryptedKeyPair)pem, password) : (pem instanceof PEMKeyPair) ? (PEMKeyPair)pem : null;
+            return new JcaPEMKeyConverter().getKeyPair(kp);
         } finally {
             if (pemParser != null) {
                 pemParser.close();
             }
+            // TODO: not really a good idea to blindly remove the BC provider
             Security.removeProvider("BC");
         }
+    }
+
+    private static PEMKeyPair decryptKey(PEMEncryptedKeyPair encryptedKeyPair, PasswordProvider passwordProvider) throws IOException {
+        Objects.requireNonNull(passwordProvider, "Support for encrypted keys enabled without supplying PasswordProvider.");
+        PEMDecryptorProvider decryptor = new JcePEMDecryptorProviderBuilder().build(passwordProvider.getPassword().toCharArray());
+        return encryptedKeyPair.decryptKeyPair(decryptor);
     }
 
     // utility; no instances

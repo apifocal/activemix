@@ -105,7 +105,7 @@ public class TokenApp {
     		return null;
     	}
     	try {
-    		return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8));
+            return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8), new StdinPasswordProvider(key));
 		} catch (Exception e) {
 			System.out.print(e.getLocalizedMessage());
 		}
