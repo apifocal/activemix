@@ -50,12 +50,12 @@ public final class Tokens {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tokens.class);
 
-    public static KeyPair readKeyPair(String key) throws Exception {
-        return TokensImpl.readKeyPair(new InputStreamReader(new ByteArrayInputStream(key.getBytes(StandardCharsets.UTF_8))));
+    public static KeyPair readKeyPair(String key, PasswordProvider password) throws Exception {
+        return TokensImpl.readKeyPair(new InputStreamReader(new ByteArrayInputStream(key.getBytes(StandardCharsets.UTF_8))), password);
     }
 
-    public static KeyPair readKeyPair(Path path) throws Exception {
-        return TokensImpl.readKeyPair(Files.newBufferedReader(path));
+    public static KeyPair readKeyPair(Path path, PasswordProvider password) throws Exception {
+        return TokensImpl.readKeyPair(Files.newBufferedReader(path), password);
     }
 
     public static void subject(final JWTClaimsSet.Builder builder, String value) {
@@ -66,10 +66,10 @@ public final class Tokens {
         Optional.ofNullable(value).map(s -> builder.issuer(s)).orElseThrow(IllegalArgumentException::new);
     }
 
-    public static String createToken(final JWTClaimsSet claims, String privkey) {
+    public static String createToken(final JWTClaimsSet claims, String privkey, PasswordProvider password) {
         SignedJWT signedJWT = null;
         try {
-            KeyPair kp = Tokens.readKeyPair(privkey);
+            KeyPair kp = Tokens.readKeyPair(privkey, password);
             if (!"RSA".equals(kp.getPublic().getAlgorithm())) {
                 // TODO: LOG, complain...
                 return null;
@@ -79,7 +79,7 @@ public final class Tokens {
             signedJWT.sign(new RSASSASigner(rsaKey));
             return signedJWT.serialize();
         } catch (Exception e) {
-            // LOG e.getLocalizedMessage()
+            LOG.warn(e.getLocalizedMessage());
         }
         return null;
     }

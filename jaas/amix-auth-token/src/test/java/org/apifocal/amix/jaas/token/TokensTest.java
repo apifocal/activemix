@@ -74,7 +74,7 @@ public class TokensTest {
         }
 
         String privkey = Resources.toString(Resources.getResource("./ssh/id_dsa-bob"), Charsets.UTF_8);
-        KeyPair keyPair = Tokens.readKeyPair(privkey);
+        KeyPair keyPair = Tokens.readKeyPair(privkey, null);
 
         Assert.assertNotNull(keyPair);
         Assert.assertNotNull(keyPair.getPrivate());
@@ -95,7 +95,7 @@ public class TokensTest {
     @Test
     public void testSignToken() throws Exception {
         String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
-        KeyPair kp = Tokens.readKeyPair(privkey);
+        KeyPair kp = Tokens.readKeyPair(privkey, null);
         LOG.info("KP ALGO: {}", kp.getPublic().getAlgorithm());
         LOG.info("KP TYPE: {}", kp.getPrivate().getClass().getName());
         RSAPrivateKey privateKey = (RSAPrivateKey)kp.getPrivate();
@@ -137,7 +137,21 @@ public class TokensTest {
         Tokens.issuer(claims, user);
 
         String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
-        String token = Tokens.createToken(claims.build(), privkey);
+        String token = Tokens.createToken(claims.build(), privkey, null);
+        Assert.assertNotNull(token);
+        LOG.info("TOKEN [{}]: {}", token.length(), token);
+    }
+
+    @Test
+    public void testCreateTokenEncryptedKey() throws Exception {
+        String user = "carol";
+        String app = "hello-world";
+        JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
+        Tokens.subject(claims, user);
+        Tokens.issuer(claims, user);
+
+        String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-carol"), Charsets.UTF_8);
+        String token = Tokens.createToken(claims.build(), privkey, new InsecurePasswordProvider());
         Assert.assertNotNull(token);
         LOG.info("TOKEN [{}]: {}", token.length(), token);
     }
