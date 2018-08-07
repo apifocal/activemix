@@ -23,10 +23,10 @@ import com.google.common.base.Strings;
 
 public final class StdinPasswordProvider implements PasswordProvider {
 
-	private final String key;
-	
+    private final String key;
+    
     public StdinPasswordProvider(String key) {
-    	this.key = Strings.nullToEmpty(key);
+        this.key = Strings.nullToEmpty(key);
     }
     
     public String getPassword() {
@@ -36,7 +36,7 @@ public final class StdinPasswordProvider implements PasswordProvider {
             // TODO: use the format version vs just concatenating strings?
             password = console != null ? new String(console.readPassword("Enter passphrase for " + key + ": ")) : password;
         } catch (Exception ex) {
-        	// LOG
+            // LOG
         }
         return password;
     }

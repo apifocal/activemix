@@ -51,7 +51,7 @@ public class TokensTest {
     
     @Test
     public void testGenerateToken() throws Exception {
-         String s = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaXNzIjoidGVuYW50IiwianRpIjoiNzJlOTY2MzEtMGVjNC00NjFiLWIyNTEtYWM1NTNjMjFkMTIzIiwiaWF0IjoxNTMxMjU2NDA5LCJleHAiOjE1MzEyNjAwMDl9.Y2enE5VN46XNGQYE5tVRaK0nElve8ri5NkTb_IhZPU0";
+        String s = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaXNzIjoidGVuYW50IiwianRpIjoiNzJlOTY2MzEtMGVjNC00NjFiLWIyNTEtYWM1NTNjMjFkMTIzIiwiaWF0IjoxNTMxMjU2NDA5LCJleHAiOjE1MzEyNjAwMDl9.Y2enE5VN46XNGQYE5tVRaK0nElve8ri5NkTb_IhZPU0";
         SignedJWT jwso = null;
         try {
             jwso = SignedJWT.parse(s);

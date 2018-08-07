@@ -24,14 +24,14 @@ import java.util.Set;
  */
 public interface TokenValidationContext {
     
-    public String getUser();
+    String getUser();
 
-    public Map<String, Set<String>> getGroups();
+    Map<String, Set<String>> getGroups();
 
-    public Path getKeysLocation();
+    Path getKeysLocation();
 
-    public Map<String, Object> getOptions();
+    Map<String, Object> getOptions();
 
-    public boolean isVerbose();
+    boolean isVerbose();
 
 }

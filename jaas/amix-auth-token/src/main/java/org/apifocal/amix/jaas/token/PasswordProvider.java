@@ -20,6 +20,6 @@ package org.apifocal.amix.jaas.token;
  */
 public interface PasswordProvider {
     
-    public String getPassword();
+    String getPassword();
 
 }

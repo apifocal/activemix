@@ -62,7 +62,7 @@ public class TokenApp {
             OPTION_KEY,
     };
     private static final String OPTIONS_FOOTER = "\n"
-    	+ "Generates JWT token as password for ActiveMQ brokers\n"
+        + "Generates JWT token as password for ActiveMQ brokers\n"
         + "For more information visit https://docs.silkmq.com";
     static {
         Arrays.asList(OPTIONS_LIST).forEach(o -> {
@@ -93,23 +93,23 @@ public class TokenApp {
     }
 
     public static String createToken(final CommandLine cli) {
-    	JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
-    	Tokens.subject(claims, Objects.requireNonNull(cli.getOptionValue("u"), "Missing option 'user'"));
-    	Tokens.issuer(claims, Objects.requireNonNull(cli.getOptionValue("i"), "Missing option 'issuer'"));
+        JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
+        Tokens.subject(claims, Objects.requireNonNull(cli.getOptionValue("u"), "Missing option 'user'"));
+        Tokens.issuer(claims, Objects.requireNonNull(cli.getOptionValue("i"), "Missing option 'issuer'"));
 
-    	Objects.requireNonNull("");
-    	String key =  cli.getOptionValue("k");
-    	Path sk = Paths.get(key);
-    	if (!Files.exists(sk) || !Files.isRegularFile(sk)) {
-    		// TODO: throw an exception
-    		return null;
-    	}
+        Objects.requireNonNull("");
+        String key =  cli.getOptionValue("k");
+        Path sk = Paths.get(key);
+        if (!Files.exists(sk) || !Files.isRegularFile(sk)) {
+            // TODO: throw an exception
+            return null;
+        }
         try {
             return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8), new StdinPasswordProvider(key));
         } catch (Exception e) {
             System.out.print(e.getLocalizedMessage());
         }
-    	return null;
+        return null;
     }
 
     public static CommandLine parse(String[] args) throws ParseException {

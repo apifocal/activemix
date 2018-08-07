@@ -22,6 +22,6 @@ import com.nimbusds.jwt.SignedJWT;
  */
 public interface TokenHandler {
     
-    public void validate(final TokenValidationContext context, SignedJWT token);
+    void validate(final TokenValidationContext context, SignedJWT token);
 
 }
