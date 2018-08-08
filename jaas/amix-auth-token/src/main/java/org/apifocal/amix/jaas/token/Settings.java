@@ -15,38 +15,95 @@
  */
 package org.apifocal.amix.jaas.token;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Resources;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
- * 
+ * Settings object which allows to read configuration properties in more handy way.
  */
 public final class Settings {
     private static final Logger LOG = LoggerFactory.getLogger(Settings.class);
 
     // TODO: decide if useful alias...
     public static interface OrgChart extends Supplier<Map<String, Set<String>>> {};
+
+    private final Map<String, ?> config;
+    private final String prefix;
+    private final Predicate<Map.Entry<String, ?>> predicate;
+
+    Settings(Map<String, ?> config) {
+        this(config, "", (entry) -> true);
+    }
+
+    Settings(Map<String, ?> config, String prefix, Predicate<Map.Entry<String, ?>> predicate) {
+        this.config = config;
+        this.prefix = prefix;
+        this.predicate = predicate;
+    }
+
+    public Settings subset(String ... path) {
+        return subset(Arrays.stream(path).reduce((s1, s2) -> s1 + "." + s2).orElse(""));
+    }
+
+    public Settings subset(String name) {
+        return subset(name, keyPredicate(name));
+    }
+
+    private Settings subset(String prefix, Predicate<Map.Entry<String, ?>> predicate) {
+        return new Settings(config, prefix, predicate);
+    }
+
+    private Predicate<Map.Entry<String, ?>> keyPredicate(String name) {
+        return new Predicate<Map.Entry<String, ?>>() {
+            @Override
+            public boolean test(Map.Entry<String, ?> entry) {
+                return entry.getKey().startsWith(name);
+            }
+        };
+    }
+
+    public String stringOption(String key, String fallback) {
+        return stringOption(key).orElse(fallback);
+    }
+
+    public Optional<String> stringOption(String key) {
+        return getObject(key)
+            .map(Object::toString);
+    }
+
+    public boolean booleanOption(String key) {
+        return booleanOption(key, false);
+    }
+
+    public boolean booleanOption(String key, boolean fallback) {
+        Optional<?> value = getObject(key);
+
+        return value.map(Object::toString)
+            .map(Boolean::parseBoolean)
+            .orElse(fallback);
+    }
+
+    private Optional<?> getObject(String key) {
+        String keyPrefix = prefix.isEmpty() ? "" : prefix + ".";
+        return config.entrySet().stream().filter(predicate.and(keyPredicate(keyPrefix + key)))
+            .map(Map.Entry::getValue)
+            .findFirst();
+    }
+
+
+    // utilities
 
     public static Supplier<Map<String, Set<String>>> groups(Path path) throws IOException {
         return new StaticValue<>(invert(parse(loadProperties(path))));
@@ -95,10 +152,6 @@ public final class Settings {
         return result;
     }
 
-    public static boolean booleanOption(Object option, boolean def) {
-        return option != null ? Boolean.parseBoolean(option.toString()) : def;
-    }
-
     private interface Reference<T> extends Supplier<T> {}
 
     private static final class StaticValue<V> implements Reference<V> {
@@ -119,10 +172,6 @@ public final class Settings {
             return obj == this || obj instanceof Supplier && this.value == ((Supplier<?>) obj).get();  // compare by identity
         }
 
-    }
-
-    // utility; no instances
-    private Settings() {
     }
 
 }

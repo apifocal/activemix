@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+import org.apifocal.amix.jaas.token.verifiers.SshKeyCodec;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;

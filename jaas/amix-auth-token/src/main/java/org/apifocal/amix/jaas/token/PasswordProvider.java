@@ -16,7 +16,7 @@
 package org.apifocal.amix.jaas.token;
 
 /**
- * TODO: javadoc
+ * Password provider is responsible for fetching a password in order to read a private key stored in file.
  */
 public interface PasswordProvider {
     

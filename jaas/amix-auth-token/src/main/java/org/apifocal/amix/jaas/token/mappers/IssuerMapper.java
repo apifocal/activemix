@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.amix.jaas.token.mappers;
 
-TokenLogin {
-    org.apifocal.amix.jaas.token.TokenLoginModule required
-    debug=true
+import com.nimbusds.jwt.JWTClaimsSet;
+import org.apifocal.amix.jaas.token.ClaimMapper;
+import org.apifocal.amix.jaas.token.Settings;
 
-    verifiers.package="org.apifocal.amix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+import java.security.Principal;
+import java.util.Collections;
+import java.util.Set;
 
-    claimMappers.package="org.apifocal.amix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+/**
+ * Mapper of issuer claim from token.
+ */
+public class IssuerMapper implements ClaimMapper {
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    public IssuerMapper(Settings settings) {
+
+    }
+
+    @Override
+    public Set<Principal> map(JWTClaimsSet claimsSet) {
+        return Collections.singleton(new IssuerPrincipal(claimsSet.getIssuer()));
+    }
+
+}

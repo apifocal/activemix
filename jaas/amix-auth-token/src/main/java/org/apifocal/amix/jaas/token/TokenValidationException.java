@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.amix.jaas.token;
 
-TokenLogin {
-    org.apifocal.amix.jaas.token.TokenLoginModule required
-    debug=true
+/**
+ * Exception raised when token fails a validation.
+ */
+public class TokenValidationException extends Exception {
 
-    verifiers.package="org.apifocal.amix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+    public TokenValidationException(String message) {
+        super(message);
+    }
 
-    claimMappers.package="org.apifocal.amix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+    public TokenValidationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+}

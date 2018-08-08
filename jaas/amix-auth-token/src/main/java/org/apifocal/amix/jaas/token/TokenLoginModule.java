@@ -15,33 +15,25 @@
  */
 package org.apifocal.amix.jaas.token;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.Principal;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Supplier;
-
-import javax.security.auth.Subject;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.auth.login.LoginException;
-import javax.security.auth.spi.LoginModule;
-
-import org.apache.activemq.jaas.GroupPrincipal;
-import org.apache.activemq.jaas.UserPrincipal;
+import com.google.common.collect.Sets;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import org.apifocal.amix.jaas.token.verifiers.nimbus.UserSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
-import com.google.common.io.Resources;
+import javax.security.auth.Subject;
+import javax.security.auth.callback.*;
+import javax.security.auth.login.LoginException;
+import javax.security.auth.spi.LoginModule;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.security.Principal;
+import java.text.ParseException;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * TODO: Doc
@@ -57,42 +49,54 @@ import com.google.common.io.Resources;
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaXNzIjoidGVuYW50IiwianRpIjoiNzJlOTY2MzEtMGVjNC00NjFiLWIyNTEtYWM1NTNjMjFkMTIzIiwiaWF0IjoxNTMxMjU2NDA5LCJleHAiOjE1MzEyNjAwMDl9.Y2enE5VN46XNGQYE5tVRaK0nElve8ri5NkTb_IhZPU0
 
  */
-public class TokenLoginModule implements LoginModule, TokenValidationContext {
-    private static final Logger LOG = LoggerFactory.getLogger(TokenLoginModule.class);
+public class TokenLoginModule implements LoginModule {
 
-    private static final String GROUPS_PROP_FILENAME = "org.apifocal.amix.jaas.properties.groups";
-    private static final String USER_KEYS_DIRNAME = "org.apifocal.amix.jaas.properties.keys";
+    public static final String VERIFIERS_PREFIX = "verifiers";
+    public static final String VERIFIERS_CLASSES = VERIFIERS_PREFIX + ".classes";
+    public static final String VERIFIERS_PACKAGE = VERIFIERS_PREFIX + ".package";
+
+    public static final String CLAIM_MAPPERS_PREFIX = "claimMappers";
+    public static final String CLAIM_MAPPERS_PACKAGE = CLAIM_MAPPERS_PREFIX + ".package";
+    public static final String CLAIM_MAPPERS_CLASSES = CLAIM_MAPPERS_PREFIX + ".classes";
+
+    private final Logger logger = LoggerFactory.getLogger(TokenLoginModule.class);
 
     private CallbackHandler callbackHandler;
     private Subject subject;
     private final Set<Principal> principals = Sets.newConcurrentHashSet();
 
     private String user;
-    private Supplier<Map<String, Set<String>>> groups;
-    private Path keys;
-    private Map<String, Object> options;
+    private Settings settings;
     private boolean verbose;
+    private List<TokenValidator> validators;
+    private List<ClaimMapper> claimMappers;
+    private JWTClaimsSet claims;
 
 
-    @SuppressWarnings("unchecked")
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
         this.subject = subject;
         this.callbackHandler = callbackHandler;
-        this.options = ImmutableMap.copyOf((Map<String, Object>)options);
 
-        verbose = Settings.booleanOption(options.get("debug"), false);
-        String groupsProperties = Strings.nullToEmpty((String)options.get(GROUPS_PROP_FILENAME));
-        Path keys = Paths.get(Strings.nullToEmpty((String)options.get(USER_KEYS_DIRNAME)));
+        settings = new Settings(options);
 
-        try {
-            groups = Settings.groups(Paths.get(Resources.getResource(groupsProperties).toURI()));
-        } catch (Exception e) {
-            throw new IllegalStateException(e.getLocalizedMessage());
+        verbose = settings.booleanOption("debug");
+
+        String verifiersPackage = settings.stringOption(VERIFIERS_PACKAGE, "org.apifocal.amix.jaas.token.verifiers");
+        Optional<String> verifiersClasses = settings.stringOption(VERIFIERS_CLASSES);
+
+        String verifierNames = verifiersClasses.orElseThrow(requiredPropertyMissing(VERIFIERS_CLASSES));
+        this.validators = createObjects(verifiersPackage, verifierNames, TokenValidator.class, VERIFIERS_PREFIX);
+
+        String mappersPackage = settings.stringOption(CLAIM_MAPPERS_PACKAGE, "org.apifocal.amix.jaas.token.mappers");
+        Optional<String> mappersClasses = settings.stringOption(CLAIM_MAPPERS_CLASSES);
+
+        String mapperNames = mappersClasses.orElseThrow(requiredPropertyMissing(CLAIM_MAPPERS_CLASSES));
+        this.claimMappers = createObjects(mappersPackage, mapperNames, ClaimMapper.class, CLAIM_MAPPERS_PREFIX);
+
+        if (validators.isEmpty() || claimMappers.isEmpty()) {
+            throw new IllegalStateException("Both validators and claim mappers must be set");
         }
-        if (!Files.exists(keys) || !Files.isDirectory(keys)) {
-            throw new IllegalStateException("Invalid provisioning of user keys. Check documentation");
-        }
-        
+
         user = null;
     }
 
@@ -111,30 +115,50 @@ public class TokenLoginModule implements LoginModule, TokenValidationContext {
         user = ncb.getName();
         char[] token = pcb.getPassword();
         token = token != null ? token : new char[0];
-        
-        Map<String, Object> claims = Tokens.processToken(this, new String(token));
-        return claims != null;
+
+        try {
+            return (this.claims = processToken(new String(token))) != null;
+        } catch (ParseException e) {
+            if (verbose) {
+                logger.warn("Failed to process token", e);
+            }
+            throw new LoginException("Invalid token");
+        }
+    }
+
+    private JWTClaimsSet processToken(String token) throws ParseException, LoginException {
+        SignedJWT parsedToken = SignedJWT.parse(token);
+
+        for (TokenValidator validator : validators) {
+            try {
+                validator.validate(parsedToken, new UserSecurityContext(user));
+            } catch (TokenValidationException e) {
+                if (verbose) {
+                    logger.warn("Detected invalid token", e);
+                }
+                throw new LoginException("Token didn't pass " + validator.getClass().getName() + " validation");
+            }
+        }
+
+        return parsedToken.getJWTClaimsSet();
     }
 
     public boolean commit() throws LoginException {
-        boolean success = user != null;
+        boolean success = claims != null;
         if (success) {
-            principals.add(new UserPrincipal(user));
-
-            Set<String> ug = groups.get().get(user);
-            if (ug != null) {
-                // TODO: throw? validate so we never get here?
-                ug.forEach(g -> principals.add(new GroupPrincipal(g))); 
+            for (ClaimMapper mapper : claimMappers) {
+                principals.addAll(mapper.map(claims));
             }
-            // TODO: add PartitionPrincipal and maybe IssuerPrincipal from ClaimSet
+
             subject.getPrincipals().addAll(principals);
+            return true;
         }
-        user = null;
-        return success;
+        return false;
     }
 
     public boolean abort() throws LoginException {
         user = null;
+        claims = null;
         return true;
     }
 
@@ -142,29 +166,64 @@ public class TokenLoginModule implements LoginModule, TokenValidationContext {
         subject.getPrincipals().removeAll(principals);
         principals.clear();
         user = null;
+        claims = null;
         // if (verbose)...LOG.debug("logout");
         return true;
     }
 
-    // TokenValidationContext interface methods
-    public String getUser() {
-        return this.user;
+    // additional methods required to handle configuration
+
+    private <T> List<T> createObjects(String packageName, String typeNames, Class<T> baseType, String configPrefix) {
+        return Arrays.stream(typeNames.split(","))
+            .map(String::trim)
+            .map(clazz -> load(packageName, clazz, baseType, getClass().getClassLoader()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(validatorClass -> create(validatorClass, settings.subset(configPrefix, validatorClass.getSimpleName())))
+            .collect(Collectors.toList());
     }
 
-    public Map<String, Set<String>> getGroups() {
-        return this.groups.get();
+    private static <T> T create(Class<T> typeClass, Settings settings) {
+        try {
+            Constructor<T> constructor = typeClass.getConstructor(Settings.class);
+            return constructor.newInstance(settings);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException("Could not find a constructor with Settings argument in type " + typeClass.getName(), e);
+        } catch (InstantiationException e) {
+            throw new IllegalStateException("Could not instantiate type " + typeClass.getName(), e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Could not access a constructor with Settings argument in type " + typeClass.getName(), e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException("Could not initialize instance of type " + typeClass.getName(), e.getTargetException());
+        }
     }
 
-    public Path getKeysLocation() {
-        return this.keys;
+    private <T> Optional<Class<T>> load(String pkg, String clazz, Class<T> baseType, ClassLoader classLoader) {
+        return Optional.of(pkg)
+            .map(String::trim)
+            .filter(prefix -> !prefix.isEmpty())
+            .map(prefix -> loadClass(classLoader, baseType, prefix + "." + clazz))
+            .orElseGet(() -> loadClass(classLoader, baseType, clazz));
     }
 
-    public Map<String, Object> getOptions() {
-        return this.options;
+    private <T> Optional<Class<T>> loadClass(ClassLoader classLoader, Class<T> baseType, String clazz) {
+        try {
+            Class<?> aClass = classLoader.loadClass(clazz);
+            if (baseType.isAssignableFrom(aClass)) {
+                return Optional.of(aClass.asSubclass(baseType));
+            }
+        } catch (ClassNotFoundException e) {
+            if (verbose) {
+                logger.warn("Could not find type {}", clazz, e);
+            } else {
+                logger.info("Failed to find type {}", clazz);
+            }
+        }
+        return Optional.empty();
     }
 
-    public boolean isVerbose() {
-        return verbose;
+    private static Supplier<? extends RuntimeException> requiredPropertyMissing(String optionName) {
+        return () -> new IllegalStateException("Option " + optionName + " must be specified");
     }
 
 }

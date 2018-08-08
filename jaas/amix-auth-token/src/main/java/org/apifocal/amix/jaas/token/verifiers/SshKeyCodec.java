@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apifocal.amix.jaas.token;
+package org.apifocal.amix.jaas.token.verifiers;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -35,8 +35,8 @@ import com.nimbusds.jose.util.Base64;
 public class SshKeyCodec {
     
     public static PublicKey parse(String encodedKey) {
-        Optional<String> k = Arrays.asList(encodedKey.split(" ")).stream().filter(keyPart()).findFirst();
-        Blob blob = k.isPresent() ? new Blob(new Base64(k.get()).decode()) : null;
+        Optional<String> keyType = Arrays.stream(encodedKey.split(" ")).filter(keyPart()).findFirst();
+        Blob blob = keyType.map(keyString -> new Blob(new Base64(keyString).decode())).orElse(null);
 
         if (blob != null) {
             try {
@@ -65,7 +65,7 @@ public class SshKeyCodec {
 
     private static Predicate<String> keyPart() {
         // both RSA and DSA keys encoding start with 'AAAA'
-        return p -> p.startsWith("AAAA");
+        return keyString -> keyString.startsWith("AAAA");
     }
 
     private static class Blob {

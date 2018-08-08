@@ -15,23 +15,14 @@
  */
 package org.apifocal.amix.jaas.token;
 
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.Set;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.JWT;
 
 /**
  * TODO: javadoc
  */
-public interface TokenValidationContext {
-    
-    String getUser();
+public interface TokenValidator<T extends JWT, C extends SecurityContext> {
 
-    Map<String, Set<String>> getGroups();
-
-    Path getKeysLocation();
-
-    Map<String, Object> getOptions();
-
-    boolean isVerbose();
+    void validate(T token, C securityContext) throws TokenValidationException;
 
 }

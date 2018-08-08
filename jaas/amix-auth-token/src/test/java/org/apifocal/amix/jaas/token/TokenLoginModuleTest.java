@@ -18,6 +18,7 @@ package org.apifocal.amix.jaas.token;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
@@ -26,11 +27,18 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
+import org.apifocal.amix.jaas.token.mappers.IssuerPrincipal;
+import org.apifocal.amix.jaas.token.mappers.SubjectPrincipal;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Resources;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * TODO: Doc
@@ -47,12 +55,23 @@ public class TokenLoginModuleTest {
 
     @Test
     public void testLogin() throws Exception {
-        LoginContext context = new LoginContext("TokenLogin", new UserTokenHandler("first", "secret"));
+        // --user foo --issuer bar --app test
+        String token = "eyJhbGciOiJSUzI1NiJ9." +
+            "eyJzdWIiOiJmb28iLCJpc3MiOiJiYXIifQ." +
+            "WQl3XKlooF-wIYK3ibYyT5AueKN9TSulBLoIdyj90sXmU9boa5yUCVHrdRI5BgC1Ep0RHbAlxGO1-e_5Z-yY81Li-wvf0MIg6jbQgQOJ1IDrDcfLS8VvnHqI5bpk5BhFaRkIQsyCvz7zbKGLqzTuI3VFvjUT6CJwSGhWdt19aJei2FiIZ6iPasVBfdZyJNmCxcKAZKdLlG2GWmXMYomVjSkitxM1SsjWGtu68ANKkkkUjdOoU-Q7v9hLb9Pa9VMIZoAQV4l__lvA-1lD2d11ezXa0I7nnoGri193Lvg1gBUtw7zzxr3Gmy0vSyjN4hegwXqvyBSIWW9sESaPYVyY2PIgMiFxJRhylqERcKOcT8Y8E43DYYkX5SdOsmwoOmScMZH7qoZfkWtMFc2rV72JyyCbjy16U-rjVFU-7hW8x3aaNEfMiXpJWaT9fU7yQYWmUO7w9TvzpH2YW3zX3qR-b9_pZaUBQvppzJmqY-_JTSR375gI3rMNS6mPHMEkMDORE1CuN7A138tXOypV3JvB3lV6AQeYMMBgepefxPwakj8A5LDDFpsiYbBRun3MHRvh8oAlr6xKzhogtbiUYo2-RG8LSEcToNpdbPqwJHCV7BtGSnfCHzI3ZsdvC9-Q4W0UwAxUpNEsgRkd178sMLuF4Ir1XwGzH05VXYKBKY0r2uY";
+
+        LoginContext context = new LoginContext("TokenLogin", new UserTokenHandler("alice", token));
         try {
             context.login();
         } catch(LoginException e) {
-            
+            fail("Unexpected error during login call " + e);
         }
+
+        Subject subject = context.getSubject();
+        assertFalse(subject.getPrincipals().isEmpty());
+
+        assertFalse(subject.getPrincipals(SubjectPrincipal.class).isEmpty());
+        assertFalse(subject.getPrincipals(IssuerPrincipal.class).isEmpty());
     }
 
     private static class UserTokenHandler implements CallbackHandler {

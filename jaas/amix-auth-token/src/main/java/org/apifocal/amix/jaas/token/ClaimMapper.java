@@ -15,13 +15,16 @@
  */
 package org.apifocal.amix.jaas.token;
 
-import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.JWTClaimsSet;
+
+import java.security.Principal;
+import java.util.Set;
 
 /**
- * TODO: javadoc
+ * A mapper which turns JWT claims into JAAS principals.
  */
-public interface TokenHandler {
-    
-    void validate(final TokenValidationContext context, SignedJWT token);
+public interface ClaimMapper {
+
+    Set<Principal> map(JWTClaimsSet claimsSet);
 
 }
