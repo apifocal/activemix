@@ -107,6 +107,11 @@ limitations under the License.
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.apifocal.amix.jaas</groupId>
+                <artifactId>amix-auth-token</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apifocal.amix.plugins</groupId>
                 <artifactId>metrics</artifactId>
                 <version>${project.version}</version>

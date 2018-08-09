@@ -52,4 +52,14 @@ limitations under the License.
         <feature>amix-plugin-metrics</feature>
     </feature>
 
+    <feature name="amix-auth-token" version="${project.version}" description="A JAAS login module which integrates JWT tokens.">
+        <feature prerequisite="true">wrap</feature>
+        <bundle>wrap:mvn:net.jcip/jcip-annotations/1.0</bundle>
+        <bundle>mvn:net.minidev/json-smart/2.3</bundle>
+        <bundle>mvn:net.minidev/accessors-smart/1.2</bundle>
+        <bundle>mvn:com.nimbusds/nimbus-jose-jwt/${nimbusds.version}</bundle>
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle>mvn:org.apifocal.amix.jaas/amix-auth-token/${project.version}</bundle>
+    </feature>
+
 </features>
