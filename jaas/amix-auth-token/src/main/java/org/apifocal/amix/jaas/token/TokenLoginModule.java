@@ -199,9 +199,13 @@ public class TokenLoginModule implements LoginModule {
     }
 
     private <T> Optional<Class<T>> load(String pkg, String clazz, Class<T> baseType, ClassLoader classLoader) {
+        if (clazz.contains(".")) {
+            return loadClass(classLoader, baseType, clazz);
+        }
+
         return Optional.of(pkg)
             .map(String::trim)
-            .filter(prefix -> !prefix.isEmpty())
+            .filter(prefix -> !prefix.isEmpty() && !clazz.contains("."))
             .map(prefix -> loadClass(classLoader, baseType, prefix + "." + clazz))
             .orElseGet(() -> loadClass(classLoader, baseType, clazz));
     }
