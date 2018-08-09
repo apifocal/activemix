@@ -198,7 +198,7 @@ public class TokenLoginModule implements LoginModule {
         }
     }
 
-    private <T> Optional<Class<T>> load(String pkg, String clazz, Class<T> baseType, ClassLoader classLoader) {
+    protected <T> Optional<Class<T>> load(String pkg, String clazz, Class<T> baseType, ClassLoader classLoader) {
         if (clazz.contains(".")) {
             return loadClass(classLoader, baseType, clazz);
         }
@@ -210,8 +210,10 @@ public class TokenLoginModule implements LoginModule {
             .orElseGet(() -> loadClass(classLoader, baseType, clazz));
     }
 
-    private <T> Optional<Class<T>> loadClass(ClassLoader classLoader, Class<T> baseType, String clazz) {
+    protected <T> Optional<Class<T>> loadClass(ClassLoader classLoader, Class<T> baseType, String clazz) {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
+            Thread.currentThread().setContextClassLoader(new CompositeClassLoader(contextClassLoader, classLoader));
             Class<?> aClass = classLoader.loadClass(clazz);
             if (baseType.isAssignableFrom(aClass)) {
                 return Optional.of(aClass.asSubclass(baseType));
@@ -222,6 +224,8 @@ public class TokenLoginModule implements LoginModule {
             } else {
                 logger.info("Failed to find type {}", clazz);
             }
+        } finally {
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
         return Optional.empty();
     }
@@ -230,4 +234,24 @@ public class TokenLoginModule implements LoginModule {
         return () -> new IllegalStateException("Option " + optionName + " must be specified");
     }
 
+    private static class CompositeClassLoader extends ClassLoader {
+        private final Logger logger = LoggerFactory.getLogger(CompositeClassLoader.class);
+        private final ClassLoader[] classLoaders;
+
+        CompositeClassLoader(ClassLoader ... classLoaders) {
+            this.classLoaders = classLoaders;
+        }
+
+        @Override
+        public Class<?> loadClass(String name) throws ClassNotFoundException {
+            for (ClassLoader loader : classLoaders) {
+                try {
+                    return loader.loadClass(name);
+                } catch (ClassNotFoundException e) {
+                    logger.debug("Couldn't find class {} in class laoder {}", name, loader);
+                }
+            }
+            return super.loadClass(name);
+        }
+    }
 }
