@@ -42,7 +42,7 @@ public class TokenSignerValidator implements TokenValidator<SignedJWT, SecurityC
 
     public TokenSignerValidator(Settings settings) {
         this.directory = settings.stringOption("keys")
-            .map(pathname -> new File(pathname))
+            .map(File::new)
             .filter(File::exists)
             .filter(File::isDirectory)
             .orElseThrow(() -> new IllegalStateException("TokenSignerValidator requires keys property pointing to authorized keys directory"));
