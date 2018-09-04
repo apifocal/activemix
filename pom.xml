@@ -64,7 +64,7 @@ limitations under the License.
         <javax-servlet-api.version>2.5</javax-servlet-api.version>
         <javax-ws-rs.version>2.1</javax-ws-rs.version>
         <junit.version>4.12</junit.version>
-        <karaf.version>4.0.10</karaf.version>
+        <karaf.version>4.1.6</karaf.version>
         <karaf.versionRange>[${karaf.version},4.2)</karaf.versionRange>
         <log4j.version>1.2.17</log4j.version>
         <logback.version>1.1.3</logback.version>
@@ -83,6 +83,7 @@ limitations under the License.
         <velocity.version>1.7</velocity.version>
         <xmlunit.version>2.2.0</xmlunit.version>
 
+        <karaf-maven-plugin.version>4.2.1</karaf-maven-plugin.version>
         <maven-bundle-plugin.version>3.5.1</maven-bundle-plugin.version>
 
         <bundle.namespace>${project.groupId}.${project.artifactId}</bundle.namespace>
@@ -720,7 +721,7 @@ limitations under the License.
                 <plugin>
                     <groupId>org.apache.karaf.tooling</groupId>
                     <artifactId>karaf-maven-plugin</artifactId>
-                    <version>${karaf.version}</version>
+                    <version>${karaf-maven-plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>
                         <archiveZip>false</archiveZip>

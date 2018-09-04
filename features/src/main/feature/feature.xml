@@ -20,11 +20,16 @@ limitations under the License.
     <repository>mvn:org.apache.karaf.features/spring/${karaf.version}/xml/features</repository>
     <repository>mvn:org.apache.activemq/activemq-karaf/${activemq.version}/xml/features</repository>
 
-    <feature name="amix-plugin-metrics" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics">
-        <feature prerequisite="true">wrap</feature>
+    <feature name="activemq-mix-amq" version="${project.version}">
         <feature>http</feature>
         <feature>shell</feature>
+        <feature>shell-compat</feature>
         <feature>activemq</feature>
+    </feature>
+
+    <feature name="amix-plugin-metrics" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics">
+        <feature prerequisite="true">wrap</feature>
+        <feature>activemq-mix-amq</feature>
 
         <bundle >mvn:com.fasterxml.jackson.core/jackson-annotations/2.9.0</bundle>
         <bundle >mvn:com.fasterxml.jackson.core/jackson-core/2.9.0</bundle>
@@ -55,6 +60,7 @@ limitations under the License.
     <feature name="amix-auth-token" version="${project.version}" description="A JAAS login module which integrates JWT tokens.">
         <feature prerequisite="true">wrap</feature>
         <bundle>wrap:mvn:net.jcip/jcip-annotations/1.0</bundle>
+        <bundle>mvn:org.ow2.asm/asm/5.2</bundle>
         <bundle>mvn:net.minidev/json-smart/2.3</bundle>
         <bundle>mvn:net.minidev/accessors-smart/1.2</bundle>
         <bundle>mvn:com.nimbusds/nimbus-jose-jwt/${nimbusds.version}</bundle>
