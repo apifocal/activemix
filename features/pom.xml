@@ -47,6 +47,10 @@ limitations under the License.
             <groupId>org.apifocal.amix.xbean</groupId>
             <artifactId>xbean-spring</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apifocal.amix.xbean</groupId>
+            <artifactId>xbean-blueprint</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.karaf.features</groupId>
