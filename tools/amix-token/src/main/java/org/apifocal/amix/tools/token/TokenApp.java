@@ -49,9 +49,11 @@ public class TokenApp {
     private static final Option OPTION_APP = Option
         .builder("a").longOpt("app").desc("Messaging application").hasArg(true).argName("app").build();
     private static final Option OPTION_ISSUER = Option
-            .builder("i").longOpt("issuer").desc("Issuer account").hasArg(true).argName("issuer").build();
+        .builder("i").longOpt("issuer").desc("Issuer account").hasArg(true).argName("issuer").build();
+    private static final Option OPTION_AUDIENCE = Option
+        .builder("d").longOpt("audience").desc("Audience").hasArg(true).argName("audience").build();
     private static final Option OPTION_KEY = Option
-            .builder("k").longOpt("sign-key").desc("Signing key").hasArg(true).argName("key").build();
+        .builder("k").longOpt("sign-key").desc("Signing key").hasArg(true).argName("key").build();
 
     private static final Options OPTIONS = new Options();
     private static final Option[] OPTIONS_LIST = {
@@ -59,6 +61,7 @@ public class TokenApp {
             OPTION_USER,
             OPTION_APP,
             OPTION_ISSUER,
+            OPTION_AUDIENCE,
             OPTION_KEY,
     };
     private static final String OPTIONS_FOOTER = "\n"
@@ -96,6 +99,7 @@ public class TokenApp {
         JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
         Tokens.subject(claims, Objects.requireNonNull(cli.getOptionValue("u"), "Missing option 'user'"));
         Tokens.issuer(claims, Objects.requireNonNull(cli.getOptionValue("i"), "Missing option 'issuer'"));
+        Tokens.audience(claims, Arrays.asList(Objects.requireNonNull(cli.getOptionValues("d"), "Missing option 'audience'")));
 
         Objects.requireNonNull("");
         String key =  cli.getOptionValue("k");
