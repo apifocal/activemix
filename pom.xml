@@ -44,7 +44,7 @@ limitations under the License.
     </scm>
 
     <properties>
-        <activemq.version>5.15.4</activemq.version>
+        <activemq.version>5.15.6</activemq.version>
 
         <camel.version>2.20.2</camel.version>
         <commons.beanutils.version>1.9.2</commons.beanutils.version>
