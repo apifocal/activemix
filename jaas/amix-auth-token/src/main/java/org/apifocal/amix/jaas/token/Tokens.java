@@ -15,26 +15,25 @@
  */
 package org.apifocal.amix.jaas.token;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyPair;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.List;
+import java.util.Optional;
+
+import org.apifocal.amix.jaas.token.impl.TokensImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import org.apifocal.amix.jaas.token.impl.TokensImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.KeyPair;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -59,8 +58,16 @@ public final class Tokens {
         Optional.ofNullable(value).map(s -> builder.issuer(s)).orElseThrow(IllegalArgumentException::new);
     }
 
+    public static void audience(final JWTClaimsSet.Builder builder, String value) {
+        Optional.ofNullable(value).map(s -> builder.audience(s)).orElseThrow(IllegalArgumentException::new);
+    }
+
     public static void audience(final JWTClaimsSet.Builder builder, List<String> value) {
         Optional.ofNullable(value).map(s -> builder.audience(s)).orElseThrow(IllegalArgumentException::new);
+    }
+
+    public static void claim(final JWTClaimsSet.Builder builder, String claim, String value) {
+        Optional.ofNullable(value).map(s -> builder.claim(claim, s)).orElseThrow(IllegalArgumentException::new);
     }
 
     public static String createToken(final JWTClaimsSet claims, String privkey, PasswordProvider password) {
