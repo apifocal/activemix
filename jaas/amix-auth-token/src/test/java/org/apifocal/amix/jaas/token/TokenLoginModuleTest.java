@@ -29,7 +29,6 @@ import javax.security.auth.login.LoginException;
 
 import org.apifocal.amix.jaas.token.mappers.IssuerPrincipal;
 import org.apifocal.amix.jaas.token.mappers.SubjectPrincipal;
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.io.Resources;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**

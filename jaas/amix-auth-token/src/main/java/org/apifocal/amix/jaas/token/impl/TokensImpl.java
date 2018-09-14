@@ -15,7 +15,6 @@
  */
 package org.apifocal.amix.jaas.token.impl;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.security.KeyPair;

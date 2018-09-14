@@ -54,7 +54,6 @@ limitations under the License.
         <dependency>
             <groupId>org.apifocal.amix.jaas</groupId>
             <artifactId>amix-auth-token</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.nimbusds</groupId>
