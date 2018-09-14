@@ -21,8 +21,10 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -64,6 +66,8 @@ public class TokenApp {
         .builder("a").longOpt("app").desc("JMS application id (optional)").hasArg(true).argName("app").build();
     private static final Option OPTION_ACL = Option
         .builder().longOpt("acl").desc("Token access privileges").hasArg(true).argName("acl").build();
+    private static final Option OPTION_EXPIRATION = Option
+            .builder().longOpt("exp").desc("Token expiration time").hasArg(true).argName("exp").build();
 
     private static final Options OPTIONS = new Options();
     private static final Option[] OPTIONS_LIST = {
@@ -72,6 +76,7 @@ public class TokenApp {
             OPTION_APP,
             OPTION_ISSUER,
             OPTION_ACL,
+            OPTION_EXPIRATION,
     };
     private static final String OPTIONS_FOOTER = "\n"
         + "Generates JWT token as password for ActiveMQ brokers\n"
@@ -155,10 +160,39 @@ public class TokenApp {
             throw new IllegalArgumentException("Invalid signing key. Check command line arguments.");
         }
 
+        // TODO: make it optional?
+        Date now = new Date();
+        Tokens.issueTime(claims, now);
+        Tokens.expiration(claims, new Date(now.getTime() + lifespan(cli.getOptionValue("exp"))));
+
         return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8), new StdinPasswordProvider(key));
     }
 
     public static void verifyToken(final CommandLine cli) throws Exception {
+    }
+
+    private static long lifespan(String exp) {
+        long delta = Tokens.days(90); // default
+        try {
+            if (exp != null) {
+                char last = exp.charAt(exp.length() - 1);
+                if (Character.isLetter(last)) {
+                    int num = Integer.parseInt(exp.substring(0, exp.length() - 1));
+                    switch (last) {
+                    case 'Z': break; // TODO: add support for explicitly defined time
+                    case 'd': delta = Tokens.days(num); break;
+                    case 'h': delta = Tokens.hours(num); break;
+                    case 'm': delta = Tokens.minutes(num); break;
+                    default: break; // TODO: report unsupported qualifier; use default
+                    }
+                } else {
+                    return Tokens.seconds(Integer.parseInt(exp));
+                }
+            }
+        } catch (Exception e) {
+            // TODO: report
+        }
+        return delta;
     }
 
     public static CommandLine parse(String[] args) throws ParseException {
