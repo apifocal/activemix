@@ -95,6 +95,8 @@ limitations under the License.
             ${bundle.namespace}.*
         </osgi.export>
         <osgi.private>${bundle.namespace}.internal.*</osgi.private>
+
+        <activemix.distro>active-mix</activemix.distro>
     </properties>
 
     <modules>
