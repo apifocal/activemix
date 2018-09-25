@@ -57,7 +57,7 @@ limitations under the License.
         <commons.validator.version>1.6</commons.validator.version>
         <cxf.version>3.2.1</cxf.version>
         <xbean.version>4.2</xbean.version>
-        <nimbusds.version>5.12</nimbusds.version>
+        <nimbusds.version>6.0.2</nimbusds.version>
 
         <guava.version>18.0</guava.version>
         <jackson.version>2.8.10</jackson.version>
