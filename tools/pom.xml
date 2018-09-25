@@ -36,9 +36,9 @@ limitations under the License.
     <description>Governance Tools for Apache ActiveMQ Clusters</description>
 
     <modules>
+        <module>amix</module>
         <module>amix-ping</module>
         <module>amix-token</module>
-        <module>distribution</module>
         <module>test-brokers</module>
     </modules>
 
