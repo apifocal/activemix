@@ -28,7 +28,7 @@ limitations under the License.
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>distribution</artifactId>
+    <artifactId>amix</artifactId>
     <packaging>pom</packaging>
 
     <name>ActiveMQ Mix - Tools - Distribution</name>
@@ -50,7 +50,6 @@ limitations under the License.
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>${activemix.distro}-${project.version}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/assembly/package.xml</descriptor>
