@@ -21,12 +21,10 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -38,9 +36,9 @@ import org.apache.commons.cli.ParseException;
 import org.apifocal.amix.jaas.token.Tokens;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 
 /**
  * JMS Token Generation Utility for Apache ActiveMQ
@@ -49,7 +47,7 @@ public class TokenApp {
 
     private static final String ACTION_HELP = "help";
     private static final String ACTION_CREATE = "create";
-    private static final String ACTION_VERIFY = "verify";
+    private static final String ACTION_SHOW = "show";
     private static final String HELP_USAGE = "\n"
         + "  amix-token create [options] <signing-key>\n"
         + "  amix-token verify [options] [<token>]";
@@ -67,14 +65,14 @@ public class TokenApp {
     private static final Option OPTION_ACL = Option
         .builder().longOpt("acl").desc("Token access privileges").hasArg(true).argName("acl").build();
     private static final Option OPTION_EXPIRATION = Option
-            .builder().longOpt("exp").desc("Token expiration time").hasArg(true).argName("exp").build();
+        .builder().longOpt("exp").desc("Token expiration time").hasArg(true).argName("exp").build();
 
     private static final Options OPTIONS = new Options();
     private static final Option[] OPTIONS_LIST = {
             OPTION_HELP,
             OPTION_USER,
-            OPTION_APP,
             OPTION_ISSUER,
+            OPTION_APP,
             OPTION_ACL,
             OPTION_EXPIRATION,
     };
@@ -99,9 +97,9 @@ public class TokenApp {
                 cli = parse(Arrays.copyOfRange(args, 1, args.length));
             }
 
-            boolean validArgs = !ImmutableSet.of(ACTION_HELP, ACTION_CREATE, ACTION_VERIFY).contains(action) ? false
+            boolean validArgs = !ImmutableSet.of(ACTION_HELP, ACTION_CREATE, ACTION_SHOW).contains(action) ? false
                 : ACTION_CREATE.equals(action) ? validateCreateArgs(cli)
-                : ACTION_VERIFY.equals(action) ? validateVerifyArgs(cli)
+                : ACTION_SHOW.equals(action) ? validateShowArgs(cli)
                 : cli.hasOption(OPTION_HELP.getOpt());
             if (!validArgs) {
                 throw new ParseException("Missing required arguments");
@@ -120,8 +118,8 @@ public class TokenApp {
             if (ACTION_CREATE.equals(action)) {
                 String token = createToken(cli);
                 System.out.println(token != null ? token : "ERROR");
-            } else if (ACTION_VERIFY.equals(action)) {
-                System.out.println("NOT YET IMPLEMENTED");
+            } else if (ACTION_SHOW.equals(action)) {
+                showToken(cli);
             }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
@@ -133,9 +131,8 @@ public class TokenApp {
         return cli.hasOption("u") && cli.hasOption("i") && cli.getArgs().length == 1;
     }
 
-    private static boolean validateVerifyArgs(CommandLine cli) {
-        // TODO: maybe log some verbose warnings
-        return cli.hasOption("i") || cli.getArgs().length == 1;
+    private static boolean validateShowArgs(CommandLine cli) {
+        return cli.getArgs().length == 1;
     }
 
     public static String createToken(final CommandLine cli) throws Exception {
@@ -168,7 +165,13 @@ public class TokenApp {
         return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8), new StdinPasswordProvider(key));
     }
 
-    public static void verifyToken(final CommandLine cli) throws Exception {
+    public static void showToken(final CommandLine cli) throws Exception {
+        String vopt = cli.getOptionValue("verify");
+        boolean verify = vopt == null ? false : Boolean.parseBoolean(vopt);
+
+        SignedJWT parsedToken = SignedJWT.parse(cli.getArgs()[0]);
+        // TODO: enhance printing
+        System.out.println(parsedToken.getJWTClaimsSet());
     }
 
     private static long lifespan(String exp) {
