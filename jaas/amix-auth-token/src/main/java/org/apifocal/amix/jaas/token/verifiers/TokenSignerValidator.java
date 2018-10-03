@@ -59,18 +59,19 @@ public class TokenSignerValidator implements TokenValidator<SignedJWT, SecurityC
                 .selectJWSKeys(header, null);
 
             DefaultJWSVerifierFactory verifierFactory = new DefaultJWSVerifierFactory();
-            int success = 0;
+            boolean success = false;
             for (Key key : keys) {
                 try {
                     JWSVerifier jwsVerifier = verifierFactory.createJWSVerifier(header, key);
                     jwsVerifier.verify(header, token.getSigningInput(), token.getSignature());
-                    success++;
+                    success = true;
+                    break;
                 } catch (JOSEException e) {
                     logger.info("Invalid signature found", e);
                 }
             }
 
-            if (success == 0) {
+            if (!success) {
                 throw new TokenValidationException("Could not verify signature. No matching keys found.");
             }
         } catch (KeySourceException e) {
