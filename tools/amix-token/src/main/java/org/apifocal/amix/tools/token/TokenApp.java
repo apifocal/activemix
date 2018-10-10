@@ -21,12 +21,13 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -35,12 +36,15 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apifocal.amix.jaas.token.Settings;
+import org.apifocal.amix.jaas.token.TokenValidationException;
 import org.apifocal.amix.jaas.token.Tokens;
+import org.apifocal.amix.jaas.token.verifiers.TokenSignerValidator;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 
 /**
  * JMS Token Generation Utility for Apache ActiveMQ
@@ -49,7 +53,7 @@ public class TokenApp {
 
     private static final String ACTION_HELP = "help";
     private static final String ACTION_CREATE = "create";
-    private static final String ACTION_VERIFY = "verify";
+    private static final String ACTION_SHOW = "show";
     private static final String HELP_USAGE = "\n"
         + "  amix-token create [options] <signing-key>\n"
         + "  amix-token verify [options] [<token>]";
@@ -67,23 +71,43 @@ public class TokenApp {
     private static final Option OPTION_ACL = Option
         .builder().longOpt("acl").desc("Token access privileges").hasArg(true).argName("acl").build();
     private static final Option OPTION_EXPIRATION = Option
-            .builder().longOpt("exp").desc("Token expiration time").hasArg(true).argName("exp").build();
+        .builder().longOpt("exp").desc("Token expiration time").hasArg(true).argName("exp").build();
+    private static final Option OPTION_VERIFY = Option
+        .builder().longOpt("verify").desc("Token signature verificaion").hasArg(false).build();
+    private static final Option OPTION_KEYS = Option
+        .builder().longOpt("keys").desc("Authorized keys file").hasArg(true).argName("keys").build();
 
     private static final Options OPTIONS = new Options();
     private static final Option[] OPTIONS_LIST = {
             OPTION_HELP,
             OPTION_USER,
-            OPTION_APP,
             OPTION_ISSUER,
+            OPTION_APP,
             OPTION_ACL,
             OPTION_EXPIRATION,
+            OPTION_VERIFY,
+            OPTION_KEYS,
     };
     private static final String OPTIONS_FOOTER = "\n"
         + "Generates JWT token as password for ActiveMQ brokers\n"
         + "For more information visit https://docs.silkmq.com";
+
+    private static final Map<String, String> CLAIM_NAMES = new HashMap<>();
+    private static final String[][] CLAIM_NAME_LIST = {
+        {"sub", "User"},
+        {"iss", "Issuer"},
+        {"aud", "App"},
+        {"iat", "Issued-At"},
+        {"exp", "Expires"},
+        {"nbf", "Not-Before"},
+    };
+
     static {
         Arrays.asList(OPTIONS_LIST).forEach(o -> {
             OPTIONS.addOption(o);
+        });
+        Arrays.asList(CLAIM_NAME_LIST).forEach(a -> {
+            CLAIM_NAMES.put(a[0], a[1]);
         });
     };
 
@@ -99,9 +123,9 @@ public class TokenApp {
                 cli = parse(Arrays.copyOfRange(args, 1, args.length));
             }
 
-            boolean validArgs = !ImmutableSet.of(ACTION_HELP, ACTION_CREATE, ACTION_VERIFY).contains(action) ? false
+            boolean validArgs = !ImmutableSet.of(ACTION_HELP, ACTION_CREATE, ACTION_SHOW).contains(action) ? false
                 : ACTION_CREATE.equals(action) ? validateCreateArgs(cli)
-                : ACTION_VERIFY.equals(action) ? validateVerifyArgs(cli)
+                : ACTION_SHOW.equals(action) ? validateShowArgs(cli)
                 : cli.hasOption(OPTION_HELP.getOpt());
             if (!validArgs) {
                 throw new ParseException("Missing required arguments");
@@ -120,8 +144,8 @@ public class TokenApp {
             if (ACTION_CREATE.equals(action)) {
                 String token = createToken(cli);
                 System.out.println(token != null ? token : "ERROR");
-            } else if (ACTION_VERIFY.equals(action)) {
-                System.out.println("NOT YET IMPLEMENTED");
+            } else if (ACTION_SHOW.equals(action)) {
+                showToken(cli);
             }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
@@ -133,9 +157,8 @@ public class TokenApp {
         return cli.hasOption("u") && cli.hasOption("i") && cli.getArgs().length == 1;
     }
 
-    private static boolean validateVerifyArgs(CommandLine cli) {
-        // TODO: maybe log some verbose warnings
-        return cli.hasOption("i") || cli.getArgs().length == 1;
+    private static boolean validateShowArgs(CommandLine cli) {
+        return cli.getArgs().length == 1 && (!cli.hasOption("verify") || cli.hasOption("keys"));
     }
 
     public static String createToken(final CommandLine cli) throws Exception {
@@ -168,7 +191,67 @@ public class TokenApp {
         return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8), new StdinPasswordProvider(key));
     }
 
-    public static void verifyToken(final CommandLine cli) throws Exception {
+    public static void showToken(final CommandLine cli) {
+        SignedJWT parsedToken;
+        Map<String, Object> claims;
+        try {
+            parsedToken = SignedJWT.parse(cli.getArgs()[0]);
+            claims = new HashMap<>(parsedToken.getJWTClaimsSet().getClaims());
+        } catch (java.text.ParseException e) {
+            System.out.println("Not a valid signed token.");
+            return;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        if (cli.hasOption("verify")) {
+            builder.append("Signature verification: ");
+
+            Map<String, String> settings = new HashMap<>();
+            settings.put("keys", Objects.requireNonNull(cli.getOptionValue("keys")));
+            TokenSignerValidator validator = new TokenSignerValidator(new Settings(settings));
+            try {
+                validator.validate(parsedToken, null);
+                builder.append("PASSED.");
+            } catch (TokenValidationException e) {
+                builder.append("FAILED:\n").append("  ").append(e.getLocalizedMessage());
+            }
+            builder.append('\n').append('\n');
+        }
+        builder.append("Claims:\n");
+        printClaims(claims, builder);
+        System.out.println(builder.toString());
+    }
+
+    private static void printClaims(Map<String, Object> claims, final StringBuilder builder) {
+        printKnownClaim(claims, builder, "sub");
+        printKnownClaim(claims, builder, "iss");
+        printKnownClaim(claims, builder, "aud");
+        printKnownClaim(claims, builder, "iat");
+        printKnownClaim(claims, builder, "exp");
+        printKnownClaim(claims, builder, "nbf");
+        claims.forEach((k, v) -> {
+            printClaim(builder, k, v.toString());
+        });
+    }
+
+    private static void printKnownClaim(Map<String, Object> claims, final StringBuilder builder, String name) {
+        String claimName = CLAIM_NAMES.get(name);
+        Object value = claims.remove(name);
+        if (value != null) {
+            printClaim(builder, claimName == null ? name : claimName, value);
+        }
+    }
+
+    private static void printClaim(final StringBuilder builder, String name, Object value) {
+        String claimName = CLAIM_NAMES.get(name);
+        claimName = claimName == null ? name : claimName;
+
+        // value cannot be null in this context
+        String text = value.toString();
+        if (value instanceof Date) {
+            text = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format((Date)value);
+        }
+        builder.append("  ").append(claimName).append(": ").append(text).append("\n");
     }
 
     private static long lifespan(String exp) {
