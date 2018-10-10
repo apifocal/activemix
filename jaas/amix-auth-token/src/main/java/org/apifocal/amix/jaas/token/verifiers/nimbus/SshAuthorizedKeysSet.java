@@ -15,6 +15,7 @@
  */
 package org.apifocal.amix.jaas.token.verifiers.nimbus;
 
+import com.nimbusds.jose.KeySourceException;
 import com.nimbusds.jose.jwk.*;
 import org.apifocal.amix.jaas.token.verifiers.SshKeyCodec;
 
@@ -37,6 +38,15 @@ class SshAuthorizedKeysSet extends JWKSet {
 
     SshAuthorizedKeysSet(File file) throws IOException {
         super(read(file));
+    }
+
+    public static List<JWK> createKeySet(File file, JWKSelector jwkSelector) throws KeySourceException {
+        try {
+            SshAuthorizedKeysSet fileJWKSet = new SshAuthorizedKeysSet(file);
+            return jwkSelector.select(fileJWKSet);
+        } catch (IOException e) {
+            throw new KeySourceException("Could not read file " + file, e);
+        }
     }
 
     private static List<JWK> read(File file) throws IOException {
@@ -64,4 +74,5 @@ class SshAuthorizedKeysSet extends JWKSet {
 
         return null;
     }
+
 }

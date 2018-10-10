@@ -30,24 +30,18 @@ import com.nimbusds.jose.proc.SecurityContext;
  *
  * @param <C> Additional context information.
  */
-public class DirectoryJWKSource<C extends SecurityContext> implements JWKSource<C> {
+public class FileJWKSource<C extends SecurityContext> implements JWKSource<C> {
 
-    public static final String KEY_FILE_EXTENSION = ".keys";
+    private final File keys;
 
-    private final File directory;
-
-    public DirectoryJWKSource(File directory) {
-        this.directory = directory;
+    public FileJWKSource(File keys) {
+        this.keys = keys;
     }
 
     @Override
     public List<JWK> get(JWKSelector jwkSelector, C context) throws KeySourceException {
         List<JWK> selectedKey = new ArrayList<>();
-
-        if (context instanceof UserSecurityContext) {
-            String user = ((UserSecurityContext) context).getUser();
-            selectedKey.addAll(SshAuthorizedKeysSet.createKeySet(new File(directory, user + KEY_FILE_EXTENSION), jwkSelector));
-        }
+        selectedKey.addAll(SshAuthorizedKeysSet.createKeySet(keys, jwkSelector));
         return selectedKey;
     }
 

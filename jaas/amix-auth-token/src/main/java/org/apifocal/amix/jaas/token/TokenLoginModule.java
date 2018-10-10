@@ -68,6 +68,7 @@ public class TokenLoginModule implements LoginModule {
     private String user;
     private Settings settings;
     private boolean verbose;
+    @SuppressWarnings("rawtypes")
     private List<TokenValidator> validators;
     private List<ClaimMapper> claimMappers;
     private JWTClaimsSet claims;
@@ -126,6 +127,7 @@ public class TokenLoginModule implements LoginModule {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private JWTClaimsSet processToken(String token) throws ParseException, LoginException {
         SignedJWT parsedToken = SignedJWT.parse(token);
 

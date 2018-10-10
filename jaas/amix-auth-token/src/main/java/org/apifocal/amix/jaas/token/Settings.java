@@ -36,14 +36,11 @@ import java.util.stream.Collectors;
 public final class Settings {
     private static final Logger LOG = LoggerFactory.getLogger(Settings.class);
 
-    // TODO: decide if useful alias...
-    public static interface OrgChart extends Supplier<Map<String, Set<String>>> {};
-
     private final Map<String, ?> config;
     private final String prefix;
     private final Predicate<Map.Entry<String, ?>> predicate;
 
-    Settings(Map<String, ?> config) {
+    public Settings(Map<String, ?> config) {
         this(config, "", (entry) -> true);
     }
 
