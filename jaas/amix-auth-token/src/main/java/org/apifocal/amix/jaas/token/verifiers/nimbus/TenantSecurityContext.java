@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.amix.jaas.token.verifiers.nimbus;
 
-TokenLogin {
-    org.apifocal.amix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.nimbusds.jose.proc.SecurityContext;
 
-    verifiers.package="org.apifocal.amix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+import java.util.Optional;
 
-    claimMappers.package="org.apifocal.amix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+/**
+ * A high level definition of security context which is supposed to deliver tenant information.
+ */
+public interface TenantSecurityContext extends SecurityContext {
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    /**
+     * Retrieves tenant name, if available.
+     *
+     * @return Tenant name.
+     */
+    Optional<String> getTenant();
+
+}

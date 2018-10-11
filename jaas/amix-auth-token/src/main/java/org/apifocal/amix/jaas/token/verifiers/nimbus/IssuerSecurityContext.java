@@ -19,25 +19,25 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A security context which delivers a user context to token processing.
+ * A security context which delivers a issuer context to token processing.
  */
-public class UserSecurityContext implements TenantSecurityContext {
+public class IssuerSecurityContext implements TenantSecurityContext {
 
-    private final String user;
+    private final String issuer;
 
-    public UserSecurityContext(String user) {
-        this.user = user;
+    public IssuerSecurityContext(String issuer) {
+        this.issuer = issuer;
     }
 
     public Optional<String> getTenant() {
-        return Optional.ofNullable(user);
+        return Optional.ofNullable(issuer);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserSecurityContext)) return false;
-        UserSecurityContext that = (UserSecurityContext) o;
+        if (!(o instanceof IssuerSecurityContext)) return false;
+        IssuerSecurityContext that = (IssuerSecurityContext) o;
         return Objects.equals(getTenant(), that.getTenant());
     }
 
@@ -48,6 +48,6 @@ public class UserSecurityContext implements TenantSecurityContext {
 
     @Override
     public String toString() {
-        return "UserSecurityContext(" + user + ")";
+        return "IssuerSecurityContext(" + issuer + ")";
     }
 }

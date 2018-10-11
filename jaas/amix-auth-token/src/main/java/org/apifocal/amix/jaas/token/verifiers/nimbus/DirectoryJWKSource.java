@@ -17,6 +17,7 @@ package org.apifocal.amix.jaas.token.verifiers.nimbus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.nimbusds.jose.KeySourceException;
@@ -24,6 +25,8 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JWK source backed by directory.
@@ -34,6 +37,7 @@ public class DirectoryJWKSource<C extends SecurityContext> implements JWKSource<
 
     public static final String KEY_FILE_EXTENSION = ".keys";
 
+    private final Logger logger = LoggerFactory.getLogger(DirectoryJWKSource.class);
     private final File directory;
 
     public DirectoryJWKSource(File directory) {
@@ -41,12 +45,20 @@ public class DirectoryJWKSource<C extends SecurityContext> implements JWKSource<
     }
 
     @Override
-    public List<JWK> get(JWKSelector jwkSelector, C context) throws KeySourceException {
+    public List<JWK> get(JWKSelector jwkSelector, C context) {
         List<JWK> selectedKey = new ArrayList<>();
 
-        if (context instanceof UserSecurityContext) {
-            String user = ((UserSecurityContext) context).getUser();
-            selectedKey.addAll(SshAuthorizedKeysSet.createKeySet(new File(directory, user + KEY_FILE_EXTENSION), jwkSelector));
+        if (context instanceof TenantSecurityContext) {
+            ((TenantSecurityContext) context).getTenant()
+                .map(user -> {
+                    try {
+                        return SshAuthorizedKeysSet.createKeySet(new File(directory, user + KEY_FILE_EXTENSION), jwkSelector);
+                    } catch (KeySourceException e) {
+                        logger.warn("Couldn't load keys - failing back to empty set.", e);
+                        return Collections.<JWK>emptySet();
+                    }
+                }
+            ).ifPresent(selectedKey::addAll);
         }
         return selectedKey;
     }
