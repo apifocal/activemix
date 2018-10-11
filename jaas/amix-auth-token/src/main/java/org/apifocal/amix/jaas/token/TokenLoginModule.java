@@ -16,8 +16,10 @@
 package org.apifocal.amix.jaas.token;
 
 import com.google.common.collect.Sets;
+import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import org.apifocal.amix.jaas.token.verifiers.nimbus.IssuerSecurityContext;
 import org.apifocal.amix.jaas.token.verifiers.nimbus.UserSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +70,7 @@ public class TokenLoginModule implements LoginModule {
     private String user;
     private Settings settings;
     private boolean verbose;
+    private boolean userAsTenant;
     @SuppressWarnings("rawtypes")
     private List<TokenValidator> validators;
     private List<ClaimMapper> claimMappers;
@@ -81,6 +84,7 @@ public class TokenLoginModule implements LoginModule {
         settings = new Settings(options);
 
         verbose = settings.booleanOption("debug");
+        userAsTenant = settings.booleanOption("userAsTenant", false);
 
         String verifiersPackage = settings.stringOption(VERIFIERS_PACKAGE, "org.apifocal.amix.jaas.token.verifiers");
         Optional<String> verifiersClasses = settings.stringOption(VERIFIERS_CLASSES);
@@ -131,9 +135,16 @@ public class TokenLoginModule implements LoginModule {
     private JWTClaimsSet processToken(String token) throws ParseException, LoginException {
         SignedJWT parsedToken = SignedJWT.parse(token);
 
+        SecurityContext securityContext;
+        if (userAsTenant) {
+            securityContext = new UserSecurityContext(user);
+        } else {
+            securityContext = new IssuerSecurityContext(parsedToken.getJWTClaimsSet().getIssuer());
+        }
+
         for (TokenValidator validator : validators) {
             try {
-                validator.validate(parsedToken, new UserSecurityContext(user));
+                validator.validate(parsedToken, securityContext);
             } catch (TokenValidationException e) {
                 if (verbose) {
                     logger.warn("Detected invalid token", e);
