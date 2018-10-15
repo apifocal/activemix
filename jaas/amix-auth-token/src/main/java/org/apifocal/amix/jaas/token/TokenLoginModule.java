@@ -19,8 +19,8 @@ import com.google.common.collect.Sets;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import org.apifocal.amix.jaas.token.verifiers.nimbus.IssuerSecurityContext;
-import org.apifocal.amix.jaas.token.verifiers.nimbus.UserSecurityContext;
+
+import org.apifocal.amix.jaas.token.verifiers.nimbus.TokenSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -136,11 +140,8 @@ public class TokenLoginModule implements LoginModule {
         SignedJWT parsedToken = SignedJWT.parse(token);
 
         SecurityContext securityContext;
-        if (userAsTenant) {
-            securityContext = new UserSecurityContext(user);
-        } else {
-            securityContext = new IssuerSecurityContext(parsedToken.getJWTClaimsSet().getIssuer());
-        }
+        // TODO: further refactoring; there is no need for 'userAsTenant', the token should have user == issuer
+        securityContext = new TokenSecurityContext(userAsTenant ? user : parsedToken.getJWTClaimsSet().getIssuer());
 
         for (TokenValidator validator : validators) {
             try {

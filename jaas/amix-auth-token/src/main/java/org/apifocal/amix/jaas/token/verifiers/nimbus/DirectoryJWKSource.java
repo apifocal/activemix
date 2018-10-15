@@ -48,8 +48,8 @@ public class DirectoryJWKSource<C extends SecurityContext> implements JWKSource<
     public List<JWK> get(JWKSelector jwkSelector, C context) {
         List<JWK> selectedKey = new ArrayList<>();
 
-        if (context instanceof TenantSecurityContext) {
-            ((TenantSecurityContext) context).getTenant()
+        if (context instanceof TokenSecurityContext) {
+            ((TokenSecurityContext)context).getIssuer()
                 .map(user -> {
                     try {
                         return SshAuthorizedKeysSet.createKeySet(new File(directory, user + KEY_FILE_EXTENSION), jwkSelector);

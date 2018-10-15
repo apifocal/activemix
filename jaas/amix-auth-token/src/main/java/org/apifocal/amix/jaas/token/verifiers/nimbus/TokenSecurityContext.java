@@ -18,36 +18,38 @@ package org.apifocal.amix.jaas.token.verifiers.nimbus;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.nimbusds.jose.proc.SecurityContext;
+
 /**
  * A security context which delivers a issuer context to token processing.
  */
-public class IssuerSecurityContext implements TenantSecurityContext {
+public class TokenSecurityContext implements SecurityContext {
 
     private final String issuer;
 
-    public IssuerSecurityContext(String issuer) {
+    public TokenSecurityContext(String issuer) {
         this.issuer = issuer;
     }
 
-    public Optional<String> getTenant() {
+    public Optional<String> getIssuer() {
         return Optional.ofNullable(issuer);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof IssuerSecurityContext)) return false;
-        IssuerSecurityContext that = (IssuerSecurityContext) o;
-        return Objects.equals(getTenant(), that.getTenant());
+        if (!(o instanceof TokenSecurityContext)) return false;
+        TokenSecurityContext that = (TokenSecurityContext) o;
+        return Objects.equals(getIssuer(), that.getIssuer());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTenant());
+        return Objects.hash(getIssuer());
     }
 
     @Override
     public String toString() {
-        return "IssuerSecurityContext(" + issuer + ")";
+        return "TokenSecurityContext(" + issuer + ")";
     }
 }
