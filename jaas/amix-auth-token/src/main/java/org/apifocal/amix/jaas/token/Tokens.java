@@ -43,14 +43,6 @@ public final class Tokens {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tokens.class);
 
-    public static KeyPair readKeyPair(String key, PasswordProvider password) throws Exception {
-        return TokensImpl.readKeyPair(new InputStreamReader(new ByteArrayInputStream(key.getBytes(StandardCharsets.UTF_8))), password);
-    }
-
-    public static KeyPair readKeyPair(Path path, PasswordProvider password) throws Exception {
-        return TokensImpl.readKeyPair(Files.newBufferedReader(path), password);
-    }
-
     public static void subject(final JWTClaimsSet.Builder builder, String value) {
         Optional.ofNullable(value).map(s -> builder.subject(s)).orElseThrow(IllegalArgumentException::new);
     }
@@ -83,7 +75,7 @@ public final class Tokens {
     public static String createToken(final JWTClaimsSet claims, String privkey, PasswordProvider password) {
         SignedJWT signedJWT = null;
         try {
-            KeyPair kp = Tokens.readKeyPair(privkey, password);
+            KeyPair kp = Keys.readKeyPair(privkey, password);
             if (!"RSA".equals(kp.getPublic().getAlgorithm())) {
                 // TODO: LOG, complain...
                 return null;

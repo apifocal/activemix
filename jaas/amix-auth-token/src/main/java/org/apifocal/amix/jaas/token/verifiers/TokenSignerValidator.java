@@ -15,30 +15,23 @@
  */
 package org.apifocal.amix.jaas.token.verifiers;
 
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.factories.DefaultJWSVerifierFactory;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.JWSVerificationKeySelector;
-import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jwt.SignedJWT;
+import java.io.File;
+
 import org.apifocal.amix.jaas.token.Settings;
-import org.apifocal.amix.jaas.token.TokenValidationException;
-import org.apifocal.amix.jaas.token.TokenValidator;
 import org.apifocal.amix.jaas.token.verifiers.nimbus.DirectoryJWKSource;
 import org.apifocal.amix.jaas.token.verifiers.nimbus.FileJWKSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.security.Key;
-import java.util.List;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 
 /**
  * Validator of token signer information.
  */
-public class TokenSignerValidator implements TokenValidator<SignedJWT, SecurityContext> {
+public class TokenSignerValidator extends AbstractSignerValidator {
 
-    private final Logger logger = LoggerFactory.getLogger(TokenSignerValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TokenSignerValidator.class);
     private final File keys;
 
     public TokenSignerValidator(Settings settings) {
@@ -48,35 +41,12 @@ public class TokenSignerValidator implements TokenValidator<SignedJWT, SecurityC
             .orElseThrow(() -> new IllegalStateException("TokenSignerValidator requires 'keys' property pointing to authorized keys directory"));
     }
 
-    @Override
-    public void validate(SignedJWT token, SecurityContext securityContext) throws TokenValidationException {
-        JWSHeader header = token.getHeader();
-        JWSAlgorithm algorithm = header.getAlgorithm();
-
-        JWKSource<SecurityContext> jwkSource = keys.isDirectory() ? new DirectoryJWKSource<>(keys) : new FileJWKSource<>(keys);
-        try {
-            List<Key> keys = new JWSVerificationKeySelector<>(algorithm, jwkSource)
-                .selectJWSKeys(header, securityContext);
-
-            DefaultJWSVerifierFactory verifierFactory = new DefaultJWSVerifierFactory();
-            boolean success = false;
-            for (Key key : keys) {
-                try {
-                    JWSVerifier jwsVerifier = verifierFactory.createJWSVerifier(header, key);
-                    jwsVerifier.verify(header, token.getSigningInput(), token.getSignature());
-                    success = true;
-                    break;
-                } catch (JOSEException e) {
-                    logger.info("Invalid signature found", e);
-                }
-            }
-
-            if (!success) {
-                throw new TokenValidationException("Could not verify signature. No matching keys found.");
-            }
-        } catch (KeySourceException e) {
-            throw new TokenValidationException("Invalid token signature", e);
+    protected JWKSource<SecurityContext> getJwkSource() {
+        if (jwkSource == null) {
+            jwkSource = keys.isDirectory() ? new DirectoryJWKSource<>(keys) : new FileJWKSource<>(keys);
+            LOG.info("Using JWKSource from {}", keys.getAbsolutePath());
         }
+        return jwkSource;
     }
 
 }
