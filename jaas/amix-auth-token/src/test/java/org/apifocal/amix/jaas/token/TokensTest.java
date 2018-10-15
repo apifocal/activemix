@@ -16,7 +16,6 @@
 package org.apifocal.amix.jaas.token;
 
 import java.security.KeyPair;
-import java.security.MessageDigest;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -25,7 +24,6 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.apifocal.amix.jaas.token.verifiers.SshKeyCodec;
-import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -75,12 +73,13 @@ public class TokensTest {
         }
 
         String privkey = Resources.toString(Resources.getResource("./ssh/id_dsa-bob"), Charsets.UTF_8);
-        KeyPair keyPair = Tokens.readKeyPair(privkey, null);
+        KeyPair keyPair = Keys.readKeyPair(privkey, null);
 
         Assert.assertNotNull(keyPair);
         Assert.assertNotNull(keyPair.getPrivate());
         Assert.assertNotNull(keyPair.getPublic());
 
+        // TODO: next part needs some refactoring; different test maybe?
         LOG.info("TYPE: {}", keyPair.getPublic().getAlgorithm());
 
         RSAPublicKey rsakey = (keyPair.getPublic() instanceof RSAPublicKey) ? (RSAPublicKey)keyPair.getPublic() : null;
@@ -89,14 +88,14 @@ public class TokensTest {
             LOG.info("SIZE: {}", rsakey.getModulus().bitLength());
         }
         
-        String fingerprint = Hex.toHexString(MessageDigest.getInstance("SHA-1").digest(keyPair.getPublic().getEncoded()));
-        LOG.info("FINGER: {} {}", fingerprint.length(), fingerprint);
+        String fingerprint = Keys.fingerprint(keyPair.getPublic(), Keys.defaultAlgorithm());
+        LOG.info("FINGER PUBLIC: {} {}", fingerprint.length(), fingerprint);
     }
     
     @Test
     public void testSignToken() throws Exception {
         String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
-        KeyPair kp = Tokens.readKeyPair(privkey, null);
+        KeyPair kp = Keys.readKeyPair(privkey, null);
         LOG.info("KP ALGO: {}", kp.getPublic().getAlgorithm());
         LOG.info("KP TYPE: {}", kp.getPrivate().getClass().getName());
         RSAPrivateKey privateKey = (RSAPrivateKey)kp.getPrivate();
