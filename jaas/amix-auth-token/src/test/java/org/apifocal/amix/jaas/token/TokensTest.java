@@ -46,14 +46,27 @@ import com.nimbusds.jwt.SignedJWT;
  */
 public class TokensTest {
     private static final Logger LOG = LoggerFactory.getLogger(TokensTest.class);
-    
-    
+
+    @Test
+    public void testGetTokenFromResource() throws Exception {
+        String token = Tokens.fromResource("./tokens/sample.token");
+        Assert.assertNotNull(token);
+        Assert.assertNotEquals(0, token.length());
+    }
+
+    @Test
+    public void testGetTokenFromFile() throws Exception {
+        String token = Tokens.fromFile("./src/test/resources/tokens/sample.token");
+        Assert.assertNotNull(token);
+        Assert.assertNotEquals(0, token.length());
+    }
+
     @Test
     public void testGenerateToken() throws Exception {
-        String s = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaXNzIjoidGVuYW50IiwianRpIjoiNzJlOTY2MzEtMGVjNC00NjFiLWIyNTEtYWM1NTNjMjFkMTIzIiwiaWF0IjoxNTMxMjU2NDA5LCJleHAiOjE1MzEyNjAwMDl9.Y2enE5VN46XNGQYE5tVRaK0nElve8ri5NkTb_IhZPU0";
+        String token = Tokens.fromResource("./tokens/sample.token");
         SignedJWT jwso = null;
         try {
-            jwso = SignedJWT.parse(s);
+            jwso = SignedJWT.parse(token);
             LOG.info("Token: {}", jwso.getJWTClaimsSet().toString());
             LOG.info("Token: {}", jwso.getJWTClaimsSet().getClaim("iss").toString());
             LOG.info("Token: {}", jwso.getJWTClaimsSet().getClaim("sub").toString());
@@ -66,13 +79,13 @@ public class TokensTest {
 
     @Test
     public void testReadSshKey() throws Exception {
-        String pubkey = Resources.toString(Resources.getResource("./ssh/id_dsa-bob.pub"), Charsets.UTF_8);
+        String pubkey = Resources.toString(Resources.getResource("./ssh/bob/id_dsa-bob.pub"), Charsets.UTF_8);
         PublicKey pk = SshKeyCodec.parse(pubkey);
         if (pk == null) {
             Assert.fail("what?");
         }
 
-        String privkey = Resources.toString(Resources.getResource("./ssh/id_dsa-bob"), Charsets.UTF_8);
+        String privkey = Resources.toString(Resources.getResource("./ssh/bob/id_dsa-bob"), Charsets.UTF_8);
         KeyPair keyPair = Keys.readKeyPair(privkey, null);
 
         Assert.assertNotNull(keyPair);
@@ -94,7 +107,7 @@ public class TokensTest {
     
     @Test
     public void testSignToken() throws Exception {
-        String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
+        String privkey = Resources.toString(Resources.getResource("./ssh/bob/id_rsa-bob"), Charsets.UTF_8);
         KeyPair kp = Keys.readKeyPair(privkey, null);
         LOG.info("KP ALGO: {}", kp.getPublic().getAlgorithm());
         LOG.info("KP TYPE: {}", kp.getPrivate().getClass().getName());
@@ -121,7 +134,7 @@ public class TokensTest {
         LOG.info("TOKEN: {}", orderOne);
         LOG.info("TOKEN size: {}", orderOne.length());
 
-        String pubkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob.pub"), Charsets.UTF_8);
+        String pubkey = Resources.toString(Resources.getResource("./ssh/bob/id_rsa-bob.pub"), Charsets.UTF_8);
         PublicKey publix = SshKeyCodec.parse(pubkey);
 
         JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey)publix);
@@ -136,7 +149,7 @@ public class TokensTest {
         Tokens.subject(claims, user);
         Tokens.issuer(claims, user);
 
-        String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-bob"), Charsets.UTF_8);
+        String privkey = Resources.toString(Resources.getResource("./ssh/bob/id_rsa-bob"), Charsets.UTF_8);
         String token = Tokens.createToken(claims.build(), privkey, null);
         Assert.assertNotNull(token);
         LOG.info("TOKEN [{}]: {}", token.length(), token);
@@ -150,7 +163,7 @@ public class TokensTest {
         Tokens.subject(claims, user);
         Tokens.issuer(claims, user);
 
-        String privkey = Resources.toString(Resources.getResource("./ssh/id_rsa-carol"), Charsets.UTF_8);
+        String privkey = Resources.toString(Resources.getResource("./ssh/carol/id_rsa-carol"), Charsets.UTF_8);
         String token = Tokens.createToken(claims.build(), privkey, new InsecurePasswordProvider());
         Assert.assertNotNull(token);
         LOG.info("TOKEN [{}]: {}", token.length(), token);
