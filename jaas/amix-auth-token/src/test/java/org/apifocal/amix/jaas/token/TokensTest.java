@@ -48,14 +48,14 @@ public class TokensTest {
     private static final Logger LOG = LoggerFactory.getLogger(TokensTest.class);
 
     @Test
-    public void testGetTokenFromResource() throws Exception {
+    public void testReadTokenFromResource() throws Exception {
         String token = Tokens.fromResource("./tokens/sample.token");
         Assert.assertNotNull(token);
         Assert.assertNotEquals(0, token.length());
     }
 
     @Test
-    public void testGetTokenFromFile() throws Exception {
+    public void testReadTokenFromFile() throws Exception {
         String token = Tokens.fromFile("./src/test/resources/tokens/sample.token");
         Assert.assertNotNull(token);
         Assert.assertNotEquals(0, token.length());
