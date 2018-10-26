@@ -31,9 +31,9 @@ limitations under the License.
         <feature prerequisite="true">wrap</feature>
         <feature>activemq-mix-amq</feature>
 
-        <bundle >mvn:com.fasterxml.jackson.core/jackson-annotations/2.9.0</bundle>
-        <bundle >mvn:com.fasterxml.jackson.core/jackson-core/2.9.0</bundle>
-        <bundle >mvn:com.fasterxml.jackson.core/jackson-databind/2.9.0</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-annotations/${jackson.version}</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-core/${jackson.version}</bundle>
+        <bundle>mvn:com.fasterxml.jackson.core/jackson-databind/${jackson.version}</bundle>
 
         <bundle>mvn:io.dropwizard.metrics/metrics-core/${metrics.version}</bundle>
         <bundle>mvn:io.dropwizard.metrics/metrics-healthchecks/${metrics.version}</bundle>
