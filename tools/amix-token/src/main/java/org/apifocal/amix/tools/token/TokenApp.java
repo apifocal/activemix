@@ -59,6 +59,8 @@ public class TokenApp {
         + "  amix-token verify [options] [<token>]";
     private static final String CLAIM_ACL = "acl";
     private static final String DEFAULT_ACL = "rw";
+    private static final String DEFAULT_EXPIRES = "90d";
+    private static final String NEVER_EXPIRES = "never";
 
     private static final Option OPTION_HELP = Option
         .builder("h").longOpt("help").build();
@@ -76,6 +78,8 @@ public class TokenApp {
         .builder().longOpt("verify").desc("Token signature verificaion").hasArg(false).build();
     private static final Option OPTION_KEYS = Option
         .builder().longOpt("keys").desc("Authorized keys file").hasArg(true).argName("keys").build();
+    private static final Option OPTION_RAW = Option
+        .builder().longOpt("raw").desc("Authorized keys file").hasArg(false).build();
 
     private static final Options OPTIONS = new Options();
     private static final Option[] OPTIONS_LIST = {
@@ -87,6 +91,7 @@ public class TokenApp {
             OPTION_EXPIRATION,
             OPTION_VERIFY,
             OPTION_KEYS,
+            OPTION_RAW,
     };
     private static final String OPTIONS_FOOTER = "\n"
         + "Generates JWT token as password for ActiveMQ brokers\n"
@@ -186,7 +191,10 @@ public class TokenApp {
         // TODO: make it optional?
         Date now = new Date();
         Tokens.issueTime(claims, now);
-        Tokens.expiration(claims, new Date(now.getTime() + lifespan(cli.getOptionValue("exp"))));
+        long exp = lifespan(cli.getOptionValue("exp"));
+        if (exp > 0) {
+            Tokens.expiration(claims, new Date(now.getTime() + exp));
+        }
 
         return Tokens.createToken(claims.build(), new String(Files.readAllBytes(sk), Charsets.UTF_8), new StdinPasswordProvider(key));
     }
@@ -194,9 +202,11 @@ public class TokenApp {
     public static void showToken(final CommandLine cli) {
         SignedJWT parsedToken;
         Map<String, Object> claims;
+        String json;
         try {
             parsedToken = SignedJWT.parse(cli.getArgs()[0]);
             claims = new HashMap<>(parsedToken.getJWTClaimsSet().getClaims());
+            json = cli.hasOption("raw") ? parsedToken.getJWTClaimsSet().toJSONObject().toString() : null;
         } catch (java.text.ParseException e) {
             System.out.println("Not a valid signed token.");
             return;
@@ -217,8 +227,12 @@ public class TokenApp {
             }
             builder.append('\n').append('\n');
         }
-        builder.append("Claims:\n");
-        printClaims(claims, builder);
+        if (json == null) {
+            builder.append("Claims:\n");
+            printClaims(claims, builder);
+        } else {
+            builder.append(json).append("\n");
+        }
         System.out.println(builder.toString());
     }
 
@@ -255,22 +269,24 @@ public class TokenApp {
     }
 
     private static long lifespan(String exp) {
-        long delta = Tokens.days(90); // default
+        String expires = exp != null ? exp : DEFAULT_EXPIRES;
+        if (NEVER_EXPIRES.compareTo(expires.toLowerCase()) == 0) {
+            return -1L;
+        }
+        long delta = 0;
         try {
-            if (exp != null) {
-                char last = exp.charAt(exp.length() - 1);
-                if (Character.isLetter(last)) {
-                    int num = Integer.parseInt(exp.substring(0, exp.length() - 1));
-                    switch (last) {
-                    case 'Z': break; // TODO: add support for explicitly defined time
-                    case 'd': delta = Tokens.days(num); break;
-                    case 'h': delta = Tokens.hours(num); break;
-                    case 'm': delta = Tokens.minutes(num); break;
-                    default: break; // TODO: report unsupported qualifier; use default
-                    }
-                } else {
-                    return Tokens.seconds(Integer.parseInt(exp));
+            char last = expires.charAt(expires.length() - 1);
+            if (Character.isLetter(last)) {
+                int num = Integer.parseInt(expires.substring(0, expires.length() - 1));
+                switch (last) {
+                case 'Z': break; // TODO: add support for explicitly defined time
+                case 'd': delta = Tokens.days(num); break;
+                case 'h': delta = Tokens.hours(num); break;
+                case 'm': delta = Tokens.minutes(num); break;
+                default: break; // TODO: report unsupported qualifier; use default
                 }
+            } else {
+                return Tokens.seconds(Integer.parseInt(expires));
             }
         } catch (Exception e) {
             // TODO: report

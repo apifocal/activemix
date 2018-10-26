@@ -15,21 +15,21 @@
  */
 package org.apifocal.amix.jaas.token;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
-import org.apifocal.amix.jaas.token.impl.TokensImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.crypto.RSASSASigner;
@@ -42,6 +42,29 @@ import com.nimbusds.jwt.SignedJWT;
 public final class Tokens {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tokens.class);
+
+    public static String fromFile(String file) throws IOException {
+        return firstContentLine(new String(Files.readAllBytes(Paths.get(file))));
+    }
+
+    public static String fromResource(String resource) throws IOException {
+        return firstContentLine(Resources.toString(Resources.getResource(resource), Charsets.UTF_8));
+    }
+
+    private static String firstContentLine(String text) {
+        // returns first non-empty, non-comment line
+        //  useful for token files, allows to put a comment with the token payload
+        Scanner scanner = new Scanner(text);
+        try {
+            while (scanner.hasNextLine()) {
+              String line = scanner.nextLine().trim();
+              if (!line.isEmpty() && !line.startsWith("#")) return line;
+            }
+        } finally {
+            scanner.close();
+        }
+        return "";
+    }
 
     public static void subject(final JWTClaimsSet.Builder builder, String value) {
         Optional.ofNullable(value).map(s -> builder.subject(s)).orElseThrow(IllegalArgumentException::new);
