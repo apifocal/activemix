@@ -57,6 +57,7 @@ public class SimpleMeterContext implements MeterContext {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Gauge<Long> gauge(String name, Supplier<Long> supplier) {
         return metricRegistry.gauge(createName(name), () -> supplier::get);
     }
@@ -73,13 +74,6 @@ public class SimpleMeterContext implements MeterContext {
 
     private String createName(String ... segments) {
         return name(prefix, segments);
-    }
-
-    private static String[] collapse(String prefix, String[] components) {
-        String[] name = new String[components.length + 1];
-        name[0] = prefix;
-        System.arraycopy(components, 0, name, 1, components.length);
-        return components;
     }
 
 }

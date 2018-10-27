@@ -42,6 +42,7 @@ limitations under the License.
             org.springframework.beans.factory.xml;resolution:=optional,
             *
         </osgi.import>
+        <osgi.private></osgi.private>
     </properties>
 
     <dependencies>
