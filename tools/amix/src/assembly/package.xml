@@ -31,7 +31,8 @@ limitations under the License.
 
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/lib</outputDirectory>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
             <useTransitiveDependencies>true</useTransitiveDependencies>
         </dependencySet>
     </dependencySets>
@@ -39,7 +40,7 @@ limitations under the License.
     <fileSets>
         <fileSet>
             <directory>src/main/resources</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>.</outputDirectory>
         </fileSet>
     </fileSets>
 

@@ -35,11 +35,13 @@ limitations under the License.
     <description>ActiveMQ JAAS Token LoginModule</description>
 
     <properties>
+        <bundle.namespace>org.apifocal.amix.jaas.token</bundle.namespace>
         <osgi.import>
             org.bouncycastle.*;resolution:=optional,
             *
         </osgi.import>
         <osgi.export>org.apifocal.amix.jaas.token.*</osgi.export>
+        <osgi.private></osgi.private>
     </properties>
 
     <dependencies>

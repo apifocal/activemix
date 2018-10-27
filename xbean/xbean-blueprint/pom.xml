@@ -48,7 +48,7 @@ limitations under the License.
             !${bundle.namespace}.cm.*,
             ${bundle.namespace}.*
         </osgi.export>
-        <osgi.private>${bundle.namespace}</osgi.private>
+        <osgi.private></osgi.private>
     </properties>
 
     <dependencies>
