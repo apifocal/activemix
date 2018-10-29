@@ -25,26 +25,31 @@ public class KeysTest {
 
     @Test
     public void testMatchDigestAlgorithm() throws Exception {
-        Assert.assertEquals("MD5", Keys.digestAlgorithmFromId("MD5"));
-        Assert.assertEquals("SHA-1", Keys.digestAlgorithmFromId("SHA1"));
-        Assert.assertEquals("SHA-256", Keys.digestAlgorithmFromId("SHA256"));
-        Assert.assertEquals("SHA-512", Keys.digestAlgorithmFromId("SHA512"));
-        Assert.assertNull(Keys.digestAlgorithmFromId("hello-world"));
+        Assert.assertEquals("MD5", Keys.digestAlgorithmFromName("MD5"));
+        Assert.assertEquals("SHA-1", Keys.digestAlgorithmFromName("SHA1"));
+        Assert.assertEquals("SHA-256", Keys.digestAlgorithmFromName("SHA256"));
+        Assert.assertEquals("SHA-512", Keys.digestAlgorithmFromName("SHA512"));
+        Assert.assertNull(Keys.digestAlgorithmFromName("hello-world"));
      }
 
     @Test
     public void testMatchDigestName() throws Exception {
-        Assert.assertEquals("MD5", Keys.digestAlgorithmToId("MD5"));
-        Assert.assertEquals("SHA1", Keys.digestAlgorithmToId("SHA-1"));
-        Assert.assertEquals("SHA256", Keys.digestAlgorithmToId("SHA-256"));
-        Assert.assertEquals("SHA512", Keys.digestAlgorithmToId("SHA-512"));
-        Assert.assertNull(Keys.digestAlgorithmToId("hello-world"));
+        Assert.assertEquals("MD5", Keys.digestAlgorithmToName("MD5"));
+        Assert.assertEquals("SHA1", Keys.digestAlgorithmToName("SHA-1"));
+        Assert.assertEquals("SHA256", Keys.digestAlgorithmToName("SHA-256"));
+        Assert.assertEquals("SHA512", Keys.digestAlgorithmToName("SHA-512"));
+        Assert.assertNull(Keys.digestAlgorithmToName("hello-world"));
      }
 
     @Test
     public void testGetDigestName() throws Exception {
-        Assert.assertEquals("MD5", Keys.digestAlgorithmFromId(Keys.getDigestName(SAMPLE_MD5)));
-        Assert.assertEquals("SHA-256", Keys.digestAlgorithmFromId(Keys.getDigestName(SAMPLE_SHA256)));
+        Assert.assertEquals("MD5", Keys.digestAlgorithmFromName(Keys.getDigestName(SAMPLE_MD5)));
+        Assert.assertEquals("SHA-256", Keys.digestAlgorithmFromName(Keys.getDigestName(SAMPLE_SHA256)));
     }
 
+    @Test
+    public void testGetDigestText() {
+        Assert.assertEquals("33:f2:84:1d:c3:0d:d5:12:57:f3:c6:e2:1f:cc:52:af", Keys.getDigestText(SAMPLE_MD5));
+        Assert.assertEquals("NUzLZ0kLqJh47YsctlAFMXT54fVNCHDM7zbAkoQ2a6g", Keys.getDigestText(SAMPLE_SHA256));
+    }
 }
