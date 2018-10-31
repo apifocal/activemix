@@ -76,8 +76,8 @@ public class TokenLoginModule implements LoginModule {
     private boolean verbose;
     private boolean userAsTenant;
     @SuppressWarnings("rawtypes")
-    private List<TokenValidator> validators;
-    private List<ClaimMapper> claimMappers;
+    protected List<TokenValidator> validators;
+    protected List<ClaimMapper> claimMappers;
     private JWTClaimsSet claims;
 
 

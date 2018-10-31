@@ -23,21 +23,35 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apifocal.amix</groupId>
-        <artifactId>amix-parent</artifactId>
+        <groupId>org.apifocal.amix.jaas</groupId>
+        <artifactId>amix-jaas</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apifocal.amix.jaas</groupId>
-    <artifactId>amix-jaas</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>amix-auth-token-spring</artifactId>
+    <packaging>bundle</packaging>
 
-    <name>ActiveMQ Mix - JAAS</name>
-    <description>JASS LoginModule(s) for Apache ActiveMQ</description>
+    <name>ActiveMQ Mix - JAAS Token Spring integration</name>
+    <description>Additional support for Spring related code</description>
 
-    <modules>
-        <module>amix-auth-token</module>
-        <module>amix-auth-token-spring</module>
-    </modules>
+    <properties>
+        <bundle.namespace>org.apifocal.amix.jaas.token.spring</bundle.namespace>
+        <osgi.import>
+            *
+        </osgi.import>
+        <osgi.export>org.apifocal.amix.jaas.token.spring*</osgi.export>
+        <osgi.private></osgi.private>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apifocal.amix.jaas</groupId>
+            <artifactId>amix-auth-token</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -76,9 +76,9 @@ limitations under the License.
         <osgi.version>6.0.0</osgi.version>
         <pax.exam.version>4.7.0</pax.exam.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <snakeyaml.version>1.17</snakeyaml.version>
+        <snakeyaml.version>1.23</snakeyaml.version>
         <springframework.version>4.1.9.RELEASE</springframework.version>
-        <swagger.version>1.5.4</swagger.version>
+        <swagger.version>1.5.21</swagger.version>
         <swagger-maven-plugin-version>3.1.5</swagger-maven-plugin-version>
         <velocity.version>1.7</velocity.version>
         <xmlunit.version>2.2.0</xmlunit.version>
@@ -109,6 +109,11 @@ limitations under the License.
             <dependency>
                 <groupId>org.apifocal.amix.jaas</groupId>
                 <artifactId>amix-auth-token</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apifocal.amix.jaas</groupId>
+                <artifactId>amix-auth-token-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -578,6 +583,16 @@ limitations under the License.
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
                 <version>${springframework.version}</version>
             </dependency>
             <dependency>
