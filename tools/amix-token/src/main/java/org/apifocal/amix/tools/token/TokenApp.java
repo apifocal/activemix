@@ -54,9 +54,9 @@ public class TokenApp {
     private static final String ACTION_HELP = "help";
     private static final String ACTION_CREATE = "create";
     private static final String ACTION_SHOW = "show";
-    private static final String HELP_USAGE = "\n"
-        + "  amix-token create [options] <signing-key>\n"
-        + "  amix-token verify [options] [<token>]";
+    private static final String[] HELP_USAGE = {"\n",
+        "  amix-token create [options] <signing-key>\n",
+        "  amix-token show [options] [<token>]"};
     private static final String CLAIM_ACL = "acl";
     private static final String DEFAULT_ACL = "rw";
     private static final String DEFAULT_EXPIRES = "90d";
@@ -75,14 +75,13 @@ public class TokenApp {
     private static final Option OPTION_EXPIRATION = Option
         .builder().longOpt("exp").desc("Token expiration time").hasArg(true).argName("exp").build();
     private static final Option OPTION_VERIFY = Option
-        .builder().longOpt("verify").desc("Token signature verificaion").hasArg(false).build();
+        .builder().longOpt("verify").desc("Token signature verification").hasArg(false).build();
     private static final Option OPTION_KEYS = Option
         .builder().longOpt("keys").desc("Authorized keys file").hasArg(true).argName("keys").build();
     private static final Option OPTION_RAW = Option
         .builder().longOpt("raw").desc("Authorized keys file").hasArg(false).build();
 
-    private static final Options OPTIONS = new Options();
-    private static final Option[] OPTIONS_LIST = {
+    private static final Option[] OPTIONS = {
             OPTION_HELP,
             OPTION_USER,
             OPTION_ISSUER,
@@ -93,6 +92,21 @@ public class TokenApp {
             OPTION_KEYS,
             OPTION_RAW,
     };
+    private static final Option[] OPTIONS_CREATE = {
+            OPTION_HELP,
+            OPTION_USER,
+            OPTION_ISSUER,
+            OPTION_APP,
+            OPTION_ACL,
+            OPTION_EXPIRATION,
+    };
+    private static final Option[] OPTIONS_SHOW = {
+            OPTION_HELP,
+            OPTION_VERIFY,
+            OPTION_KEYS,
+            OPTION_RAW,
+    };
+
     private static final String OPTIONS_FOOTER = "\n"
         + "Generates JWT token as password for ActiveMQ brokers\n"
         + "For more information visit https://docs.silkmq.com";
@@ -108,9 +122,6 @@ public class TokenApp {
     };
 
     static {
-        Arrays.asList(OPTIONS_LIST).forEach(o -> {
-            OPTIONS.addOption(o);
-        });
         Arrays.asList(CLAIM_NAME_LIST).forEach(a -> {
             CLAIM_NAMES.put(a[0], a[1]);
         });
@@ -136,12 +147,12 @@ public class TokenApp {
                 throw new ParseException("Missing required arguments");
             }
         } catch (ParseException e) {
-            usage(e.getLocalizedMessage());
+            usage(action, e.getLocalizedMessage());
             return;
         }
 
         if (cli.hasOption("h")) {
-            help(System.out);
+            usage(action, null);
             return;
         }
 
@@ -154,16 +165,17 @@ public class TokenApp {
             }
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
+            helpCreate(System.out);
         }
     }
 
     private static boolean validateCreateArgs(CommandLine cli) {
         // TODO: maybe log some verbose warnings
-        return cli.hasOption("u") && cli.hasOption("i") && cli.getArgs().length == 1;
+        return cli.hasOption("h") || (cli.hasOption("u") && cli.hasOption("i") && cli.getArgs().length == 1);
     }
 
     private static boolean validateShowArgs(CommandLine cli) {
-        return cli.getArgs().length == 1 && (!cli.hasOption("verify") || cli.hasOption("keys"));
+        return cli.hasOption("h") || (cli.getArgs().length == 1 && (!cli.hasOption("verify") || cli.hasOption("keys")));
     }
 
     public static String createToken(final CommandLine cli) throws Exception {
@@ -296,18 +308,24 @@ public class TokenApp {
 
     public static CommandLine parse(String[] args) throws ParseException {
         CommandLineParser parser = new DefaultParser();
-        return parser.parse(OPTIONS, args);
+        return parser.parse(fromArray(OPTIONS), args);
     }
 
-    public static void usage() {
-        usage(null);
+    public static void usage(String action) {
+        usage(action, null);
     }
 
-    public static void usage(String message) {
+    public static void usage(String action, String message) {
         if (message != null && !message.isEmpty()) {
             System.out.println(message);
         }
-        help(System.out);
+        if (ACTION_CREATE.equals(action)) {
+            helpCreate(System.out);
+        } else if (ACTION_SHOW.equals(action)) {
+            helpShow(System.out);
+        } else {
+            help(System.out);
+        }
     }
 
     private static void help(PrintStream out) {
@@ -316,7 +334,29 @@ public class TokenApp {
         PrintWriter pw = new PrintWriter(out);
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(new CustomComparator());
-        formatter.printHelp(pw, HelpFormatter.DEFAULT_WIDTH, HELP_USAGE, "\nOptions:", filterOptions(OPTIONS),
+        formatter.printHelp(pw, HelpFormatter.DEFAULT_WIDTH, HELP_USAGE[0] + HELP_USAGE[1] + HELP_USAGE[2], "\nOptions:", filterOptions(fromArray(OPTIONS)),
+             HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, OPTIONS_FOOTER, false);
+        pw.flush();
+    }
+
+    private static void helpCreate(PrintStream out) {
+        out.println();
+
+        PrintWriter pw = new PrintWriter(out);
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.setOptionComparator(new CustomComparator());
+        formatter.printHelp(pw, HelpFormatter.DEFAULT_WIDTH, HELP_USAGE[0] + HELP_USAGE[1], "\nOptions:", filterOptions(fromArray(OPTIONS_CREATE)),
+             HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, OPTIONS_FOOTER, false);
+        pw.flush();
+    }
+
+    private static void helpShow(PrintStream out) {
+        out.println();
+
+        PrintWriter pw = new PrintWriter(out);
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.setOptionComparator(new CustomComparator());
+        formatter.printHelp(pw, HelpFormatter.DEFAULT_WIDTH, HELP_USAGE[0] + HELP_USAGE[2], "\nOptions:", filterOptions(fromArray(OPTIONS_SHOW)),
              HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, OPTIONS_FOOTER, false);
         pw.flush();
     }
@@ -329,6 +369,12 @@ public class TokenApp {
                 result.addOption(o);
             }
         });
+        return result;
+    }
+
+    private static Options fromArray(final Option[] options) {
+        final Options result = new Options();
+        Arrays.asList(options).forEach(o -> result.addOption(o));
         return result;
     }
 
