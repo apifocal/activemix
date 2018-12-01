@@ -27,7 +27,7 @@ limitations under the License.
         <feature>activemq</feature>
     </feature>
 
-    <feature name="amix-plugin-metrics" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics">
+    <feature name="activemx-plugin-metrics" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics">
         <feature prerequisite="true">wrap</feature>
         <feature>activemq-mix-amq</feature>
 
@@ -42,22 +42,22 @@ limitations under the License.
         <bundle>wrap:mvn:com.papertrail/profiler/1.0.2</bundle>
 
         <bundle>mvn:io.dropwizard.metrics/metrics-servlets/${metrics.version}</bundle>
-        <bundle start-level="50">mvn:org.apifocal.amix.plugins/metrics/${project.version}</bundle>
+        <bundle start-level="50">mvn:org.apifocal.activemx.plugins/metrics/${project.version}</bundle>
     </feature>
 
-    <feature name="amix-plugin-metrics-spring" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics with spring support">
-        <bundle>mvn:org.apifocal.amix.xbean/xbean-spring/${project.version}</bundle>
-        <feature>amix-plugin-metrics</feature>
+    <feature name="activemx-plugin-metrics-spring" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics with spring support">
+        <bundle>mvn:org.apifocal.activemx.xbean/xbean-spring/${project.version}</bundle>
+        <feature>activemx-plugin-metrics</feature>
     </feature>
 
-    <feature name="amix-plugin-metrics-blueprint" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics with blueprint support">
+    <feature name="activemx-plugin-metrics-blueprint" version="${project.version}" description="Plugin integrating ActiveMQ Mix and Dropwizard Metrics with blueprint support">
         <feature>aries-blueprint</feature>
         <feature>activemq-blueprint</feature>
-        <bundle>mvn:org.apifocal.amix.xbean/xbean-blueprint/${project.version}</bundle>
-        <feature>amix-plugin-metrics</feature>
+        <bundle>mvn:org.apifocal.activemx.xbean/xbean-blueprint/${project.version}</bundle>
+        <feature>activemx-plugin-metrics</feature>
     </feature>
 
-    <feature name="amix-auth-token" version="${project.version}" description="A JAAS login module which integrates JWT tokens.">
+    <feature name="activemx-auth-token" version="${project.version}" description="A JAAS login module which integrates JWT tokens.">
         <feature prerequisite="true">wrap</feature>
         <bundle>wrap:mvn:net.jcip/jcip-annotations/1.0</bundle>
         <bundle>mvn:org.ow2.asm/asm/5.2</bundle>
@@ -65,7 +65,7 @@ limitations under the License.
         <bundle>mvn:net.minidev/accessors-smart/1.2</bundle>
         <bundle>mvn:com.nimbusds/nimbus-jose-jwt/${nimbusds.version}</bundle>
         <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
-        <bundle>mvn:org.apifocal.amix.jaas/amix-auth-token/${project.version}</bundle>
+        <bundle>mvn:org.apifocal.activemx.jaas/activemx-auth-token/${project.version}</bundle>
     </feature>
 
 </features>
