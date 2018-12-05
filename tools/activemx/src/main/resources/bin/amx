@@ -1,0 +1,219 @@
+#!/bin/sh
+
+realpath() {
+  READLINK_EXISTS=$(command -v readlink &> /dev/null)
+  if [ -z $READLINK_EXISTS ]; then
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(ls -l "$(basename "${1}")" | awk -F"-> " '{print $2}')
+    while [ "${LINK}" ]; do
+        echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(ls -l "$(basename "${1}")" | awk -F"-> " '{print $2}')
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  else
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(readlink "$(basename "${1}")")
+    while [ "${LINK}" ]; do
+        echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(readlink "$(basename "${1}")")
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  fi
+}
+
+REALNAME=$(realpath "$0")
+DIRNAME=$(dirname "${REALNAME}")
+PROGNAME=$(basename "${REALNAME}")
+
+#
+# Load common functions
+#
+. "${DIRNAME}/inc"
+
+#
+# Sourcing environment settings for amx similar to tomcats setenv
+#
+AMIX_SCRIPT="${PROGNAME}"
+export AMIX_SCRIPT
+if [ -f "${DIRNAME}/setenv" ]; then
+  . "${DIRNAME}/setenv"
+fi
+
+forceNoRoot() {
+    # If configured, prevent execution as root
+    if [ "${AMIX_NOROOT}" ] && [ "$(id -u)" -eq 0 ]; then
+        die "Do not run as root!"
+    fi
+}
+
+setupClassPath() {
+    # Add the jars in the lib dir
+    for file in "${AMIX_HOME}"/lib/*.jar
+    do
+        if [ -z "${CLASSPATH}" ]; then
+            CLASSPATH="${file}"
+        else
+            CLASSPATH="${CLASSPATH}:${file}"
+        fi
+    done
+
+    # Append configuration directory to classpath, so log4j configuration can be overriden locally
+    CLASSPATH="$AMIX_HOME/conf:$CLASSPATH"
+}
+
+init() {
+    # Prevent root execution if configured
+    forceNoRoot
+
+    # Determine if there is special OS handling we must perform
+    detectOS
+
+    # Unlimit the number of file descriptors if possible
+    unlimitFD
+
+    # Locate the amx home directory
+    locateHome
+
+    # Setup the native library path
+    setupNativePath
+
+    # Locate the Java VM to execute
+    locateJava
+
+    # Determine the JVM vendor
+    detectJVM
+
+    # Determine the JVM version >= 1.6
+    checkJvmVersion
+
+    # Setup default options
+    setupDefaults
+
+    # Setup classpath
+    setupClassPath
+
+    # Install debug options
+    setupDebugOptions
+
+}
+
+run() {
+    OPTS=""
+    if [ "x$CHECK_ROOT_INSTANCE_RUNNING" = "x" ]; then
+        CHECK_ROOT_INSTANCE_RUNNING=true
+    fi
+
+    if ${cygwin}; then
+        JAVA_HOME=$(cygpath --path --windows "${JAVA_HOME}")
+    fi
+    convertPaths
+    cd "${AMIX_BASE}" || exit 2
+
+    if [ -z "${AMIX_EXEC}" ]; then
+        AMIX_EXEC=""
+    fi
+
+    debug=false
+    nodebug=false
+    ARGS=""
+    while [ "${1}" != "" ]; do
+        case "${1}" in
+            'debug')
+                debug=true
+                shift
+                ;;
+            'ping')
+                MAIN=org.apifocal.activemx.tools.ping.PingApp
+                ARGS="$ARGS"
+                shift
+                ;;
+            'token')
+                MAIN=org.apifocal.activemx.tools.token.TokenApp
+                ARGS="$ARGS"
+                shift
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    if ${nodebug}; then
+        debug=false
+    fi
+    if ${debug}; then
+        if [ "x${JAVA_DEBUG_OPTS}" = "x" ]; then
+            JAVA_DEBUG_OPTS="${DEFAULT_JAVA_DEBUG_OPTS}"
+        fi
+        JAVA_OPTS="${JAVA_DEBUG_OPTS} ${JAVA_OPTS}"
+    fi
+
+    while true; do
+        # When users want to update the lib version of, they just need to create
+        # a lib.next directory and on the new restart, it will replace the current lib directory.
+        if [ -d "${AMIX_HOME:?}/lib.next" ] ; then
+            echo "Updating libs..."
+            rm -rf "${AMIX_HOME:?}/lib"
+            mv -f "${AMIX_HOME:?}/lib.next" "${AMIX_HOME}/lib"
+        fi
+
+        if [ "${VERSION}" -gt "80" ]; then
+            ${AMIX_EXEC} "${JAVA}" ${JAVA_OPTS} \
+                --add-opens java.base/java.security=ALL-UNNAMED \
+                --add-opens java.base/java.net=ALL-UNNAMED \
+                --add-opens java.base/java.lang=ALL-UNNAMED \
+                --add-opens java.base/java.util=ALL-UNNAMED \
+                --add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED \
+                --add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED \
+                --add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED \
+                --add-exports=java.xml.bind/com.sun.xml.internal.bind.v2.runtime=ALL-UNNAMED \
+                --add-exports=jdk.xml.dom/org.w3c.dom.html=ALL-UNNAMED \
+                --add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED \
+                --add-modules java.xml.ws.annotation,java.corba,java.transaction,java.xml.bind,java.xml.ws \
+                ${AMIX_SYSTEM_OPTS} \
+                ${AMIX_OPTS} \
+                ${OPTS} \
+                -classpath "${CLASSPATH}" \
+                ${MAIN} ${ARGS} "$@"
+        else
+            ${AMIX_EXEC} "${JAVA}" ${JAVA_OPTS} \
+                ${AMIX_SYSTEM_OPTS} \
+                ${AMIX_OPTS} \
+                ${OPTS} \
+                -classpath "${CLASSPATH}" \
+                ${MAIN} ${ARGS} "$@"
+        fi
+
+        AMIX_RC=$?
+        if [ ${AMIX_DAEMON} ] ; then
+            exit ${AMIX_RC}
+        else
+            if [ "${AMIX_RC}" -eq 10 ]; then
+               echo "Restarting JVM..."
+            else
+               exit ${AMIX_RC}
+            fi
+        fi
+    done
+}
+
+nothing() {
+   # nothing to do here
+   a=a
+}
+
+main() {
+    init
+    trap 'nothing' TSTP
+    run "$@"
+}
+
+main "$@"

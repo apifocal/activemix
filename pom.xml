@@ -28,8 +28,8 @@ limitations under the License.
         <version>1</version>
     </parent>
 
-    <groupId>org.apifocal.amix</groupId>
-    <artifactId>amix-parent</artifactId>
+    <groupId>org.apifocal.activemx</groupId>
+    <artifactId>activemx-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -107,42 +107,42 @@ limitations under the License.
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apifocal.amix.jaas</groupId>
-                <artifactId>amix-auth-token</artifactId>
+                <groupId>org.apifocal.activemx.jaas</groupId>
+                <artifactId>activemx-auth-token</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.amix.jaas</groupId>
-                <artifactId>amix-auth-token-spring</artifactId>
+                <groupId>org.apifocal.activemx.jaas</groupId>
+                <artifactId>activemx-auth-token-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.amix.plugins</groupId>
+                <groupId>org.apifocal.activemx.plugins</groupId>
                 <artifactId>metrics</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.amix.xbean</groupId>
+                <groupId>org.apifocal.activemx.xbean</groupId>
                 <artifactId>xbean-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.amix.xbean</groupId>
+                <groupId>org.apifocal.activemx.xbean</groupId>
                 <artifactId>xbean-blueprint</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.amix.tools</groupId>
-                <artifactId>amix-ping</artifactId>
+                <groupId>org.apifocal.activemx.tools</groupId>
+                <artifactId>activemx-ping</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.amix.tools</groupId>
-                <artifactId>amix-token</artifactId>
+                <groupId>org.apifocal.activemx.tools</groupId>
+                <artifactId>activemx-token</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.amix</groupId>
+                <groupId>org.apifocal.activemx</groupId>
                 <artifactId>features</artifactId>
                 <version>${project.version}</version>
                 <classifier>features</classifier>
