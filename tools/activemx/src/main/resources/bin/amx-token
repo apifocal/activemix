@@ -24,7 +24,7 @@ PROGNAME=$(basename "${REALNAME}")
 . "${DIRNAME}/inc"
 
 #
-# Sourcing environment settings for amix similar to tomcats setenv
+# Sourcing environment settings for amx similar to tomcats setenv
 #
 AMIX_SCRIPT="${PROGNAME}"
 export AMIX_SCRIPT
@@ -36,7 +36,7 @@ init() {
     # Determine if there is special OS handling we must perform
     detectOS
 
-    # Locate the amix home directory
+    # Locate the amx home directory
     locateHome
 }
 
@@ -50,7 +50,7 @@ run() {
         AMIX_REDIRECT="/dev/null"
     fi
 
-    exec "${AMIX_HOME}/bin/amix" token "$@" >> "${AMIX_REDIRECT}" 2>&1 &
+    exec "${AMIX_HOME}/bin/amx" token "$@" >> "${AMIX_REDIRECT}" 2>&1 &
 }
 
 main() {

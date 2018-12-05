@@ -163,7 +163,7 @@ public class PingApp {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(new CustomComparator());
         formatter.printHelp(pw, HelpFormatter.DEFAULT_WIDTH,
-             "amix-ping [options] <broker-url> [destination]", "\nOptions:", filterOptions(OPTIONS),
+             "amx-ping [options] <broker-url> [destination]", "\nOptions:", filterOptions(OPTIONS),
              HelpFormatter.DEFAULT_LEFT_PAD, HelpFormatter.DEFAULT_DESC_PAD, OPTIONS_FOOTER, false);
         pw.flush();
     }

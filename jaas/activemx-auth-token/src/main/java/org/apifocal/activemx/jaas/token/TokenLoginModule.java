@@ -90,13 +90,13 @@ public class TokenLoginModule implements LoginModule {
         verbose = settings.booleanOption("debug");
         userAsTenant = settings.booleanOption("userAsTenant", false);
 
-        String verifiersPackage = settings.stringOption(VERIFIERS_PACKAGE, "org.apifocal.amix.jaas.token.verifiers");
+        String verifiersPackage = settings.stringOption(VERIFIERS_PACKAGE, "org.apifocal.amx.jaas.token.verifiers");
         Optional<String> verifiersClasses = settings.stringOption(VERIFIERS_CLASSES);
 
         String verifierNames = verifiersClasses.orElseThrow(requiredPropertyMissing(VERIFIERS_CLASSES));
         this.validators = createObjects(verifiersPackage, verifierNames, TokenValidator.class, VERIFIERS_PREFIX);
 
-        String mappersPackage = settings.stringOption(CLAIM_MAPPERS_PACKAGE, "org.apifocal.amix.jaas.token.mappers");
+        String mappersPackage = settings.stringOption(CLAIM_MAPPERS_PACKAGE, "org.apifocal.amx.jaas.token.mappers");
         Optional<String> mappersClasses = settings.stringOption(CLAIM_MAPPERS_CLASSES);
 
         String mapperNames = mappersClasses.orElseThrow(requiredPropertyMissing(CLAIM_MAPPERS_CLASSES));

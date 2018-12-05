@@ -55,8 +55,8 @@ public class TokenApp {
     private static final String ACTION_CREATE = "create";
     private static final String ACTION_SHOW = "show";
     private static final String[] HELP_USAGE = {"\n",
-        "  amix-token create [options] <signing-key>\n",
-        "  amix-token show [options] [<token>]"};
+        "  amx-token create [options] <signing-key>\n",
+        "  amx-token show [options] [<token>]"};
     private static final String CLAIM_ACL = "acl";
     private static final String DEFAULT_ACL = "rw";
     private static final String DEFAULT_EXPIRES = "90d";

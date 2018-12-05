@@ -39,7 +39,7 @@ PROGNAME=$(basename "${REALNAME}")
 . "${DIRNAME}/inc"
 
 #
-# Sourcing environment settings for amix similar to tomcats setenv
+# Sourcing environment settings for amx similar to tomcats setenv
 #
 AMIX_SCRIPT="${PROGNAME}"
 export AMIX_SCRIPT
@@ -79,7 +79,7 @@ init() {
     # Unlimit the number of file descriptors if possible
     unlimitFD
 
-    # Locate the amix home directory
+    # Locate the amx home directory
     locateHome
 
     # Setup the native library path
@@ -131,12 +131,12 @@ run() {
                 shift
                 ;;
             'ping')
-                MAIN=org.apifocal.amix.tools.ping.PingApp
+                MAIN=org.apifocal.activemx.tools.ping.PingApp
                 ARGS="$ARGS"
                 shift
                 ;;
             'token')
-                MAIN=org.apifocal.amix.tools.token.TokenApp
+                MAIN=org.apifocal.activemx.tools.token.TokenApp
                 ARGS="$ARGS"
                 shift
                 ;;
