@@ -41,8 +41,8 @@ limitations under the License.
             !${bundle.namespace}.*,
             !com.thoughtworks.qdox.*,
             !org.apache.tools.ant.*,
-            org.springframework.web.*;resolution:=optional;version="[4.3.17,5)",
-            org.springframework.*;version="[4.3.17,5)",
+            org.springframework.web.*;resolution:=optional;version="[4.3.18,5)",
+            org.springframework.*;version="[4.3.18,5)",
             *
         </osgi.import>
         <osgi.export>
