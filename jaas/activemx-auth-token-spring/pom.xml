@@ -31,7 +31,7 @@ limitations under the License.
     <artifactId>activemx-auth-token-spring</artifactId>
     <packaging>bundle</packaging>
 
-    <name>ActiveMQ Mix - JAAS Token Spring integration</name>
+    <name>ActiveMX - JAAS Token Spring integration</name>
     <description>Additional support for Spring related code</description>
 
     <properties>

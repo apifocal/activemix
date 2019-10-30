@@ -32,7 +32,7 @@ limitations under the License.
     <artifactId>metrics</artifactId>
     <packaging>bundle</packaging>
 
-    <name>ActiveMQ Mix - Plugins - Metrics</name>
+    <name>ActiveMX - Plugins - Metrics</name>
     <description>Broker plugin which exposes additional diagnostics via dropwizard metrics.</description>
 
     <properties>

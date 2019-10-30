@@ -32,7 +32,7 @@ limitations under the License.
     <artifactId>xbean-spring</artifactId>
     <packaging>bundle</packaging>
 
-    <name>ActiveMQ Mix - XBean - Spring</name>
+    <name>ActiveMX - XBean - Spring</name>
     <description>XBean Spring put on Spring 4.3.x.</description>
 
     <properties>

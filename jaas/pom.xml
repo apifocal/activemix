@@ -32,8 +32,8 @@ limitations under the License.
     <artifactId>activemx-jaas</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMQ Mix - JAAS</name>
-    <description>JASS LoginModule(s) for Apache ActiveMQ</description>
+    <name>ActiveMX - JAAS</name>
+    <description>JASS LoginModule(s) using JWT tokens</description>
 
     <modules>
         <module>activemx-auth-token</module>

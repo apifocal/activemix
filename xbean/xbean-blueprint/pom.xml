@@ -32,7 +32,7 @@ limitations under the License.
     <artifactId>xbean-blueprint</artifactId>
     <packaging>bundle</packaging>
 
-    <name>ActiveMQ Mix - XBean - Blueprint</name>
+    <name>ActiveMX - XBean - Blueprint</name>
     <description>XBean Blueprint without dependency on aries internals.</description>
 
     <properties>

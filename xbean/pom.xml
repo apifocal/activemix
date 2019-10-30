@@ -31,8 +31,8 @@ limitations under the License.
     <artifactId>xbean</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMQ Mix - XBean</name>
-    <description>Repackaging of xbean dependency to supported versions of Spring..</description>
+    <name>ActiveMX - XBean</name>
+    <description>Repackaging of xbean dependency to supported versions of Spring.</description>
 
     <modules>
         <module>xbean-spring</module>

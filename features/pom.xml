@@ -31,8 +31,8 @@ limitations under the License.
     <artifactId>features</artifactId>
     <packaging>feature</packaging>
 
-    <name>ActiveMQ Mix - Features</name>
-    <description>ActiveMQ Mix feature set.</description>
+    <name>ActiveMX - Features</name>
+    <description>ActiveMX feature set</description>
 
     <dependencies>
         <dependency>

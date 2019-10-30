@@ -31,8 +31,8 @@ limitations under the License.
     <artifactId>activemx-token</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMQ Mix - Token</name>
-    <description>ActiveMQ Token Generation Utility Utility</description>
+    <name>ActiveMX - Token</name>
+    <description>Security Token Generation Utility</description>
 
     <dependencies>
         <dependency>

@@ -31,8 +31,8 @@ limitations under the License.
     <artifactId>activemx-auth-token</artifactId>
     <packaging>bundle</packaging>
 
-    <name>ActiveMQ Mix - JAAS Token</name>
-    <description>ActiveMQ JAAS Token LoginModule</description>
+    <name>ActiveMX - JAAS Token</name>
+    <description>JAAS LoginModule using tokens</description>
 
     <properties>
         <bundle.namespace>org.apifocal.activemx.jaas.token</bundle.namespace>

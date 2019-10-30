@@ -32,7 +32,7 @@ limitations under the License.
     <artifactId>activemx-tools</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMQ Mix - Tools</name>
+    <name>ActiveMX - Tools</name>
     <description>Governance Tools for Apache ActiveMQ Clusters</description>
 
     <modules>
