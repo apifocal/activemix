@@ -44,42 +44,41 @@ limitations under the License.
     </scm>
 
     <properties>
-        <activemq.version>5.15.6</activemq.version>
+        <activemq.version>5.15.12</activemq.version>
 
-        <camel.version>2.20.4</camel.version>
         <commons.beanutils.version>1.9.2</commons.beanutils.version>
         <commons.cli.version>1.4</commons.cli.version>
         <commons.collections.version>3.2.2</commons.collections.version>
         <commons.digester.version>1.8.1</commons.digester.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <commons-lang3.version>3.4</commons-lang3.version>
-        <commons.io.version>2.5</commons.io.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
+        <commons.io.version>2.6</commons.io.version>
         <commons.validator.version>1.6</commons.validator.version>
-        <cxf.version>3.2.6</cxf.version>
-        <xbean.version>4.2</xbean.version>
-        <nimbusds.version>6.0.2</nimbusds.version>
+        <cxf.version>3.3.5</cxf.version>
+        <xbean.version>4.16</xbean.version>
+        <nimbusds.version>8.11</nimbusds.version>
 
-        <guava.version>18.0</guava.version>
-        <jackson.version>2.9.7</jackson.version>
+        <guava.version>28.2-jre</guava.version>
+        <jackson.version>2.11.0.rc1</jackson.version>
         <javax-servlet-api.version>2.5</javax-servlet-api.version>
-        <javax-ws-rs.version>2.1</javax-ws-rs.version>
-        <junit.version>4.12</junit.version>
+        <javax-ws-rs.version>2.1.1</javax-ws-rs.version>
+        <junit.version>4.13</junit.version>
         <log4j.version>1.2.17</log4j.version>
-        <logback.version>1.1.3</logback.version>
-        <metrics.version>4.0.3</metrics.version>
-        <mockito.version>2.0.44-beta</mockito.version>
+        <logback.version>1.2.3</logback.version>
+        <metrics.version>4.1.5</metrics.version>
+        <mockito.version>3.3.3</mockito.version>
         <osgi.annotation.version>6.0.0</osgi.annotation.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <osgi.service.component.version>1.3.0</osgi.service.component.version>
         <osgi.version>6.0.0</osgi.version>
         <pax.exam.version>4.7.0</pax.exam.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <snakeyaml.version>1.23</snakeyaml.version>
-        <springframework.version>4.3.18.RELEASE</springframework.version>
-        <swagger.version>1.5.21</swagger.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <snakeyaml.version>1.26</snakeyaml.version>
+        <springframework.version>5.2.5.RELEASE</springframework.version>
+        <swagger.version>2.0.0-rc2</swagger.version>
         <swagger-maven-plugin-version>3.1.5</swagger-maven-plugin-version>
         <velocity.version>1.7</velocity.version>
-        <xmlunit.version>2.2.0</xmlunit.version>
+        <xmlunit.version>2.6.4</xmlunit.version>
     </properties>
 
     <modules>
@@ -215,11 +214,6 @@ limitations under the License.
                 <version>${swagger.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-                <version>${javax-mail.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${javax-ws-rs.version}</version>
@@ -242,11 +236,6 @@ limitations under the License.
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-broker</artifactId>
-                <version>${activemq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.activemq</groupId>
-                <artifactId>activemq-camel</artifactId>
                 <version>${activemq.version}</version>
             </dependency>
             <dependency>
@@ -289,46 +278,6 @@ limitations under the License.
                 <groupId>org.apache.activemq.tooling</groupId>
                 <artifactId>activemq-junit</artifactId>
                 <version>${activemq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-core</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-core-osgi</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-elasticsearch</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-netty</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-spring</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-stream</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-test</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-test-spring</artifactId>
-                <version>${camel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -413,11 +362,6 @@ limitations under the License.
                 <version>${xbean.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.elasticsearch</groupId>
-                <artifactId>elasticsearch</artifactId>
-                <version>${elasticsearch.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
