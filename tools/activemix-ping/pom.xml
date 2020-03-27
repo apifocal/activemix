@@ -19,59 +19,41 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apifocal.activemx.jaas</groupId>
-        <artifactId>activemx-jaas</artifactId>
+        <groupId>org.apifocal.activemix.tools</groupId>
+        <artifactId>activemix-tools</artifactId>
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>activemx-auth-token</artifactId>
+    <artifactId>activemix-ping</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - JAAS Token</name>
-    <description>JAAS LoginModule using tokens</description>
+    <name>ActiveMX - Ping</name>
+    <description>Ping Utility for Apache ActiveMQ</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-jaas</artifactId>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>[1.52,)</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>[1.52,)</version>
-        </dependency>
-
-        <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-client</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

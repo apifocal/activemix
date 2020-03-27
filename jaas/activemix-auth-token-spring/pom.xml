@@ -19,12 +19,12 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apifocal.activemx.jaas</groupId>
-        <artifactId>activemx-jaas</artifactId>
+        <groupId>org.apifocal.activemix.jaas</groupId>
+        <artifactId>activemix-jaas</artifactId>
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>activemx-auth-token-spring</artifactId>
+    <artifactId>activemix-auth-token-spring</artifactId>
     <packaging>jar</packaging>
 
     <name>ActiveMX - JAAS Token Spring integration</name>
@@ -32,8 +32,8 @@ limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>org.apifocal.activemx.jaas</groupId>
-            <artifactId>activemx-auth-token</artifactId>
+            <groupId>org.apifocal.activemix.jaas</groupId>
+            <artifactId>activemix-auth-token</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

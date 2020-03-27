@@ -19,22 +19,22 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.apifocal.activemx</groupId>
-        <artifactId>activemx-parent</artifactId>
+        <groupId>org.apifocal.activemix</groupId>
+        <artifactId>activemix-parent</artifactId>
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apifocal.activemx.tools</groupId>
-    <artifactId>activemx-tools</artifactId>
+    <groupId>org.apifocal.activemix.tools</groupId>
+    <artifactId>activemix-tools</artifactId>
     <packaging>pom</packaging>
 
     <name>ActiveMX - Tools</name>
     <description>Governance Tools for Apache ActiveMQ Clusters</description>
 
     <modules>
-        <module>activemx</module>
-        <module>activemx-ping</module>
-        <module>activemx-token</module>
+        <module>activemix</module>
+        <module>activemix-ping</module>
+        <module>activemix-token</module>
         <module>test-brokers</module>
     </modules>
 

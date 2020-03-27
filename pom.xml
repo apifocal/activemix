@@ -24,8 +24,8 @@ limitations under the License.
         <version>1</version>
     </parent>
 
-    <groupId>org.apifocal.activemx</groupId>
-    <artifactId>activemx-parent</artifactId>
+    <groupId>org.apifocal.activemix</groupId>
+    <artifactId>activemix-parent</artifactId>
     <version>1.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -87,42 +87,42 @@ limitations under the License.
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apifocal.activemx.jaas</groupId>
-                <artifactId>activemx-auth-token</artifactId>
+                <groupId>org.apifocal.activemix.jaas</groupId>
+                <artifactId>activemix-auth-token</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.activemx.jaas</groupId>
-                <artifactId>activemx-auth-token-spring</artifactId>
+                <groupId>org.apifocal.activemix.jaas</groupId>
+                <artifactId>activemix-auth-token-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.activemx.plugins</groupId>
+                <groupId>org.apifocal.activemix.plugins</groupId>
                 <artifactId>metrics</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.activemx.xbean</groupId>
+                <groupId>org.apifocal.activemix.xbean</groupId>
                 <artifactId>xbean-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.activemx.xbean</groupId>
+                <groupId>org.apifocal.activemix.xbean</groupId>
                 <artifactId>xbean-blueprint</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.activemx.tools</groupId>
-                <artifactId>activemx-ping</artifactId>
+                <groupId>org.apifocal.activemix.tools</groupId>
+                <artifactId>activemix-ping</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.activemx.tools</groupId>
-                <artifactId>activemx-token</artifactId>
+                <groupId>org.apifocal.activemix.tools</groupId>
+                <artifactId>activemix-token</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apifocal.activemx</groupId>
+                <groupId>org.apifocal.activemix</groupId>
                 <artifactId>features</artifactId>
                 <version>${project.version}</version>
                 <classifier>features</classifier>
