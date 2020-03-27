@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.token;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.JWT;
 
-    verifiers.package="org.apifocal.activemix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+/**
+ * TODO: javadoc
+ */
+public interface TokenValidator<T extends JWT, C extends SecurityContext> {
 
-    claimMappers.package="org.apifocal.activemix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+    void validate(T token, C securityContext) throws TokenValidationException;
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+}

@@ -13,17 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.plugins.metrics;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.Timer;
 
-    verifiers.package="org.apifocal.activemix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+import java.util.function.Supplier;
 
-    claimMappers.package="org.apifocal.activemix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+public interface MeterContext {
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    Timer timer(String name);
+
+    Counter counter(String name);
+
+    Meter meter(String name);
+
+    Gauge gauge(String name, Supplier<Long> supplier);
+
+    MeterContext child(String name);
+
+    MeterContext sibling(String name);
+
+}

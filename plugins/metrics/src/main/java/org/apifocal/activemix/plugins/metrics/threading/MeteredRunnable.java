@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.plugins.metrics.threading;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.codahale.metrics.Timer;
 
-    verifiers.package="org.apifocal.activemix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+public class MeteredRunnable implements Runnable {
 
-    claimMappers.package="org.apifocal.activemix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+    private final Runnable delegate;
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    private Timer timer;
+
+    public MeteredRunnable(Runnable delegate) {
+        this.delegate = delegate;
+    }
+
+    @Override
+    public void run() {
+        timer.time(delegate);
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+}

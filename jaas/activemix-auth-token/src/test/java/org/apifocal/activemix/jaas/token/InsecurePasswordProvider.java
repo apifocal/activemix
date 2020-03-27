@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.token;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import org.apifocal.activemix.jaas.token.PasswordProvider;
 
-    verifiers.package="org.apifocal.activemix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+public final class InsecurePasswordProvider implements PasswordProvider {
+    public static final String DEFAULT_INSECURE_PASSWORD = "secret";
 
-    claimMappers.package="org.apifocal.activemix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+    private final String password;
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    public InsecurePasswordProvider() {
+        this(DEFAULT_INSECURE_PASSWORD);
+    }
+    public InsecurePasswordProvider(String password) {
+        this.password = password;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+
+}

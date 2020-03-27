@@ -23,7 +23,7 @@ limitations under the License.
         <constructor-arg ref="metricRegistry" />
     </bean>
 
-    <bean id="reporter" class="org.apifocal.activemx.plugins.metrics.Reporters" factory-method="console" destroy-method="stop">
+    <bean id="reporter" class="org.apifocal.activemix.plugins.metrics.Reporters" factory-method="console" destroy-method="stop">
         <constructor-arg ref="metricRegistry" />
     </bean>
 

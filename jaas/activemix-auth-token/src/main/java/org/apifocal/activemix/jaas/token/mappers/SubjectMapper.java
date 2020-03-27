@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.token.mappers;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.nimbusds.jwt.JWTClaimsSet;
 
-    verifiers.package="org.apifocal.activemix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+import java.security.Principal;
+import java.util.Collections;
+import java.util.Set;
 
-    claimMappers.package="org.apifocal.activemix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+import org.apifocal.activemix.jaas.token.ClaimMapper;
+import org.apifocal.activemix.jaas.token.Settings;
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+/**
+ * Mapper of subject attribute from token.
+ */
+public class SubjectMapper implements ClaimMapper {
+
+    public SubjectMapper(Settings settings) {
+
+    }
+
+    @Override
+    public Set<Principal> map(JWTClaimsSet claimsSet) {
+        return Collections.singleton(new SubjectPrincipal(claimsSet.getSubject()));
+    }
+
+}

@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.plugins.metrics;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.codahale.metrics.ConsoleReporter;
+import com.codahale.metrics.MetricRegistry;
 
-    verifiers.package="org.apifocal.activemix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+import java.util.concurrent.TimeUnit;
 
-    claimMappers.package="org.apifocal.activemix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+public class Reporters {
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    public static ConsoleReporter console(MetricRegistry registry) {
+        ConsoleReporter reporter = ConsoleReporter.forRegistry(registry).build();
+        reporter.start(10, TimeUnit.SECONDS);
+        return reporter;
+    }
+
+}

@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.token;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.nimbusds.jwt.JWTClaimsSet;
 
-    verifiers.package="org.apifocal.activemix.jaas.token.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+import java.security.Principal;
+import java.util.Set;
 
-    claimMappers.package="org.apifocal.activemix.jaas.token.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+/**
+ * A mapper which turns JWT claims into JAAS principals.
+ */
+public interface ClaimMapper {
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    Set<Principal> map(JWTClaimsSet claimsSet);
+
+}
