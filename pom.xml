@@ -63,11 +63,6 @@ limitations under the License.
         <logback.version>1.2.3</logback.version>
         <metrics.version>4.1.5</metrics.version>
         <mockito.version>3.3.3</mockito.version>
-        <osgi.annotation.version>6.0.0</osgi.annotation.version>
-        <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <osgi.service.component.version>1.3.0</osgi.service.component.version>
-        <osgi.version>6.0.0</osgi.version>
-        <pax.exam.version>4.7.0</pax.exam.version>
         <slf4j.version>1.7.30</slf4j.version>
         <snakeyaml.version>1.26</snakeyaml.version>
         <springframework.version>5.2.5.RELEASE</springframework.version>
@@ -104,11 +99,6 @@ limitations under the License.
             <dependency>
                 <groupId>org.apifocal.activemix.xbean</groupId>
                 <artifactId>xbean-spring</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apifocal.activemix.xbean</groupId>
-                <artifactId>xbean-blueprint</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -345,11 +335,6 @@ limitations under the License.
             <dependency>
                 <groupId>org.apache.xbean</groupId>
                 <artifactId>xbean-finder</artifactId>
-                <version>${xbean.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.xbean</groupId>
-                <artifactId>xbean-blueprint</artifactId>
                 <version>${xbean.version}</version>
             </dependency>
             <dependency>

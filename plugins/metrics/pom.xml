@@ -31,15 +31,6 @@ limitations under the License.
     <name>ActiveMX - Plugins - Metrics</name>
     <description>Broker plugin which exposes additional diagnostics via dropwizard metrics.</description>
 
-    <properties>
-        <osgi.import>
-            org.apache.xbean.blueprint.context.impl;resolution:=optional,
-            org.apache.xbean.spring.context.v2;resolution:=optional,
-            org.springframework.beans.factory.xml;resolution:=optional,
-            *
-        </osgi.import>
-        <osgi.private />
-    </properties>
 
     <dependencies>
         <dependency>
@@ -62,10 +53,6 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.xbean</groupId>
             <artifactId>xbean-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xbean</groupId>
-            <artifactId>xbean-blueprint</artifactId>
         </dependency>
     </dependencies>
 
