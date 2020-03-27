@@ -1,5 +1,5 @@
-# activemq-mix
-Apache ActiveMQ Governance Tools
+# activemix
+Governance Tools for Messaging Systems based on Apache ActiveMQ 5.x
 
 ## Security
 
