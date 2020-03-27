@@ -29,19 +29,10 @@ limitations under the License.
     </parent>
 
     <artifactId>activemx-auth-token-spring</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>ActiveMX - JAAS Token Spring integration</name>
     <description>Additional support for Spring related code</description>
-
-    <properties>
-        <bundle.namespace>org.apifocal.activemx.jaas.token.spring</bundle.namespace>
-        <osgi.import>
-            *
-        </osgi.import>
-        <osgi.export>org.apifocal.activemx.jaas.token.spring*</osgi.export>
-        <osgi.private></osgi.private>
-    </properties>
 
     <dependencies>
         <dependency>
