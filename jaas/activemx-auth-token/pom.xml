@@ -25,20 +25,10 @@ limitations under the License.
     </parent>
 
     <artifactId>activemx-auth-token</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>ActiveMX - JAAS Token</name>
     <description>JAAS LoginModule using tokens</description>
-
-    <properties>
-        <bundle.namespace>org.apifocal.activemx.jaas.token</bundle.namespace>
-        <osgi.import>
-            org.bouncycastle.*;resolution:=optional,
-            *
-        </osgi.import>
-        <osgi.export>org.apifocal.activemx.jaas.token.*</osgi.export>
-        <osgi.private />
-    </properties>
 
     <dependencies>
         <dependency>

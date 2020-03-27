@@ -26,7 +26,7 @@ limitations under the License.
 
     <groupId>org.apifocal.activemx.plugins</groupId>
     <artifactId>metrics</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>ActiveMX - Plugins - Metrics</name>
     <description>Broker plugin which exposes additional diagnostics via dropwizard metrics.</description>

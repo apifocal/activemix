@@ -26,27 +26,10 @@ limitations under the License.
 
     <groupId>org.apifocal.activemx.xbean</groupId>
     <artifactId>xbean-spring</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <name>ActiveMX - XBean - Spring</name>
     <description>XBean Spring put on Spring 4.3.x.</description>
-
-    <properties>
-        <bundle.namespace>org.apache.xbean.spring.context</bundle.namespace>
-        <osgi.import>
-            !${bundle.namespace}.*,
-            !com.thoughtworks.qdox.*,
-            !org.apache.tools.ant.*,
-            org.springframework.web.*;resolution:=optional;version="[4.3.18,5)",
-            org.springframework.*;version="[4.3.18,5)",
-            *
-        </osgi.import>
-        <osgi.export>
-            !${bundle.namespace}.generator.*,
-            ${bundle.namespace}.*
-        </osgi.export>
-        <osgi.private>${bundle.namespace}</osgi.private>
-    </properties>
 
     <dependencies>
         <dependency>

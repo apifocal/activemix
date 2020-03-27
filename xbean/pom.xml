@@ -32,7 +32,6 @@ limitations under the License.
 
     <modules>
         <module>xbean-spring</module>
-        <module>xbean-blueprint</module>
     </modules>
 
 </project>
