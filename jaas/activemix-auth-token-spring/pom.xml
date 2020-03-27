@@ -27,7 +27,7 @@ limitations under the License.
     <artifactId>activemix-auth-token-spring</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - JAAS Token Spring integration</name>
+    <name>ActiveMix - JAAS Token - Spring</name>
     <description>Additional support for Spring related code</description>
 
     <dependencies>

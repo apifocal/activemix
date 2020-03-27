@@ -22,13 +22,14 @@ limitations under the License.
         <groupId>org.apifocal.activemix</groupId>
         <artifactId>activemix-parent</artifactId>
         <version>1.1.0-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>plugins</artifactId>
+    <artifactId>activemix-plugins</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMX - Plugins</name>
-    <description>Additional plugins for ActiveMQ v5.x brokers.</description>
+    <name>ActiveMix - Plugins</name>
+    <description>Custom plugins for ActiveMQ v5.x brokers</description>
 
     <modules>
         <module>metrics</module>

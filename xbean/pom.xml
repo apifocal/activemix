@@ -22,12 +22,13 @@ limitations under the License.
         <groupId>org.apifocal.activemix</groupId>
         <artifactId>activemix-parent</artifactId>
         <version>1.1.0-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>xbean</artifactId>
+    <artifactId>activemix-xbean</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMX - XBean</name>
+    <name>ActiveMix - XBean</name>
     <description>Repackaging of xbean dependency to supported versions of Spring.</description>
 
     <modules>

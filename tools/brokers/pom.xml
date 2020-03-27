@@ -24,10 +24,10 @@ limitations under the License.
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>test-brokers</artifactId>
+    <artifactId>activemix-brokers</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMX - Test Brokers</name>
+    <name>ActiveMix - Clusters</name>
     <description>ActiveMQ test brokers running standalone (using activemq-maven-plugin)</description>
 
     <properties>

@@ -27,7 +27,7 @@ limitations under the License.
     <artifactId>activemix-auth-token</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - JAAS Token</name>
+    <name>ActiveMix - JAAS Token</name>
     <description>JAAS LoginModule using tokens</description>
 
     <dependencies>

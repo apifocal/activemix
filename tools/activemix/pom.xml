@@ -27,7 +27,7 @@ limitations under the License.
     <artifactId>activemix</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMX - Tools - Distribution</name>
+    <name>ActiveMix - Tools - Distribution</name>
     <description>Tools distribution for nix based systems.</description>
 
     <dependencies>

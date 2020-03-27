@@ -27,7 +27,7 @@ limitations under the License.
     <artifactId>activemix-token</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - Token</name>
+    <name>ActiveMix - Token</name>
     <description>Security Token Generation Utility</description>
 
     <dependencies>

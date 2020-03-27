@@ -27,7 +27,7 @@ limitations under the License.
     <artifactId>activemix-ping</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - Ping</name>
+    <name>ActiveMix - Ping</name>
     <description>Ping Utility for Apache ActiveMQ</description>
 
     <dependencies>

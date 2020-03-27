@@ -20,15 +20,15 @@ limitations under the License.
 
     <parent>
         <groupId>org.apifocal.activemix</groupId>
-        <artifactId>xbean</artifactId>
+        <artifactId>activemix-xbean</artifactId>
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.apifocal.activemix.xbean</groupId>
-    <artifactId>xbean-spring</artifactId>
+    <artifactId>activemix-xbean-spring</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - XBean - Spring</name>
+    <name>ActiveMix - XBean - Spring</name>
     <description>XBean Spring put on Spring 4.3.x.</description>
 
     <dependencies>
