@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Copyright (c) 2017-2018 apifocal LLC. All rights reserved.
+Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ limitations under the License.
     <artifactId>activemix-ping</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - Ping</name>
+    <name>ActiveMix - Ping</name>
     <description>Ping Utility for Apache ActiveMQ</description>
 
     <dependencies>

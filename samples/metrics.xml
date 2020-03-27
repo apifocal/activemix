@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="utf-8" ?>
 <!--
-Copyright (c) 2017-2018 apifocal LLC. All rights reserved.
+Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ limitations under the License.
         <constructor-arg ref="metricRegistry" />
     </bean>
 
-    <bean id="reporter" class="org.apifocal.activemx.plugins.metrics.Reporters" factory-method="console" destroy-method="stop">
+    <bean id="reporter" class="org.apifocal.activemix.plugins.metrics.Reporters" factory-method="console" destroy-method="stop">
         <constructor-arg ref="metricRegistry" />
     </bean>
 

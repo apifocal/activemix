@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Copyright (c) 2017-2018 apifocal LLC. All rights reserved.
+Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,13 +22,14 @@ limitations under the License.
         <groupId>org.apifocal.activemix</groupId>
         <artifactId>activemix-parent</artifactId>
         <version>1.1.0-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.apifocal.activemix.jaas</groupId>
     <artifactId>activemix-jaas</artifactId>
     <packaging>pom</packaging>
 
-    <name>ActiveMX - JAAS</name>
+    <name>ActiveMix - JAAS</name>
     <description>JASS LoginModule(s) using JWT tokens</description>
 
     <modules>

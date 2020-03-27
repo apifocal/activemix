@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Copyright (c) 2017-2018 apifocal LLC. All rights reserved.
+Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,26 +20,17 @@ limitations under the License.
 
     <parent>
         <groupId>org.apifocal.activemix</groupId>
-        <artifactId>plugins</artifactId>
+        <artifactId>activemix-plugins</artifactId>
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.apifocal.activemix.plugins</groupId>
-    <artifactId>metrics</artifactId>
+    <artifactId>activemix-metrics</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMX - Plugins - Metrics</name>
+    <name>ActiveMix - Plugins - Metrics</name>
     <description>Broker plugin which exposes additional diagnostics via dropwizard metrics.</description>
 
-    <properties>
-        <osgi.import>
-            org.apache.xbean.blueprint.context.impl;resolution:=optional,
-            org.apache.xbean.spring.context.v2;resolution:=optional,
-            org.springframework.beans.factory.xml;resolution:=optional,
-            *
-        </osgi.import>
-        <osgi.private />
-    </properties>
 
     <dependencies>
         <dependency>
@@ -62,10 +53,6 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.xbean</groupId>
             <artifactId>xbean-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xbean</groupId>
-            <artifactId>xbean-blueprint</artifactId>
         </dependency>
     </dependencies>
 
@@ -110,7 +97,7 @@ limitations under the License.
                                 <echo>Running the XSDDoc task</echo>
                                 <taskdef name="xsddoc" classname="net.sf.xframe.xsddoc.Task" />
                                 <mkdir dir="${basedir}/target/site/xsddoc" />
-                                <xsddoc file="${basedir}/target/classes/metrics.xsd" out="${basedir}/target/site/xsddoc" doctitle="Apache ActiveMQ Metrics plugin XML Schema Reference" header="&lt;a href='http://silkmq.com/'&gt;SilkMQ&lt;/a&gt;" footer="Copyright 2017-2018 (c) the &lt;a href='http://apifocal.com/'&gt;Apifocal LLC&lt;/a&gt;" verbose="false" />
+                                <xsddoc file="${basedir}/target/classes/metrics.xsd" out="${basedir}/target/site/xsddoc" doctitle="Apache ActiveMQ Metrics plugin XML Schema Reference" header="&lt;a href='http://silkmq.com/'&gt;SilkMQ&lt;/a&gt;" footer="Copyright 2017-2020 (c) the &lt;a href='http://apifocal.com/'&gt;Apifocal LLC&lt;/a&gt;" verbose="false" />
                                 <!--
                                    css="${basedir}/../etc/css/stylesheet.css"
                                 -->
