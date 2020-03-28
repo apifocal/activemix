@@ -21,7 +21,7 @@ limitations under the License.
     <parent>
         <groupId>org.apifocal.activemix</groupId>
         <artifactId>activemix-plugins</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0.rc1</version>
     </parent>
 
     <groupId>org.apifocal.activemix.plugins</groupId>
