@@ -21,7 +21,7 @@ limitations under the License.
     <parent>
         <groupId>org.apifocal.activemix.jaas</groupId>
         <artifactId>activemix-jaas</artifactId>
-        <version>1.0.0.rc1</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>activemix-auth-token</artifactId>
