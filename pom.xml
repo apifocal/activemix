@@ -26,7 +26,7 @@ limitations under the License.
 
     <groupId>org.apifocal.activemix</groupId>
     <artifactId>activemix</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0.rc1</version>
     <packaging>pom</packaging>
 
     <name>ActiveMix</name>
@@ -35,7 +35,7 @@ limitations under the License.
     <scm>
         <connection>scm:git:git@github.com:apifocal/activemix.git</connection>
         <developerConnection>scm:git:git@github.com:apifocal/activemix.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>activemix-1.0.0.rc1</tag>
         <url>https://github.com/apifocal/activemix</url>
     </scm>
 
