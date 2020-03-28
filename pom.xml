@@ -42,7 +42,6 @@ limitations under the License.
     <modules>
         <module>jaas</module>
         <module>parent</module>
-        <module>plugins</module>
         <module>tools</module>
         <module>xbean</module>
     </modules>
