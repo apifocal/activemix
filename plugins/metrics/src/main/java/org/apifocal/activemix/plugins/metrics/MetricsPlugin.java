@@ -24,7 +24,6 @@ import org.apache.activemq.broker.BrokerPlugin;
  *
  * After applying this plugin tracking of connections, destinations and other interactions will be made.
  *
- * @org.apache.xbean.XBean element="metrics"
  */
 public class MetricsPlugin implements BrokerPlugin {
 
