@@ -36,8 +36,9 @@ import org.apifocal.activemix.jaas.token.verifiers.SshKeyCodec;
  * A key set which is backed by ssh authorized keys file.
  */
 class SshAuthorizedKeysSet extends JWKSet {
+	private static final long serialVersionUID = 1L;
 
-    SshAuthorizedKeysSet(File file) throws IOException {
+	SshAuthorizedKeysSet(File file) throws IOException {
         super(read(file));
     }
 

@@ -48,7 +48,8 @@ public final class TokensImpl {
             pemParser = new PEMParser(reader);
             Object pem = pemParser.readObject();
             PEMKeyPair kp = (pem instanceof PEMEncryptedKeyPair) 
-                ? decryptKey((PEMEncryptedKeyPair)pem, password) : (pem instanceof PEMKeyPair) ? (PEMKeyPair)pem : null;
+                ? decryptKey((PEMEncryptedKeyPair)pem, password) 
+                : (pem instanceof PEMKeyPair) ? (PEMKeyPair)pem : null;
             return new JcaPEMKeyConverter().getKeyPair(kp);
         } finally {
             if (pemParser != null) {
