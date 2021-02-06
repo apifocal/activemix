@@ -24,7 +24,6 @@ limitations under the License.
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.apifocal.activemix</groupId>
     <artifactId>activemix-parent</artifactId>
     <packaging>pom</packaging>
 
@@ -42,7 +41,6 @@ limitations under the License.
         <commons-lang3.version>3.9</commons-lang3.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.validator.version>1.6</commons.validator.version>
-        <cxf.version>3.3.5</cxf.version>
         <xbean.version>4.16</xbean.version>
         <nimbusds.version>8.11</nimbusds.version>
 
@@ -64,6 +62,7 @@ limitations under the License.
     </properties>
 
     <dependencyManagement>
+        <!-- project artifacts -->
         <dependencies>
             <dependency>
                 <groupId>org.apifocal.activemix.jaas</groupId>
@@ -241,51 +240,6 @@ limitations under the License.
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-core</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-client</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-extension-providers</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-security-cors</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-service-description</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http-jetty</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-local</artifactId>
-                <version>${cxf.version}</version>
             </dependency>
 
             <dependency>
