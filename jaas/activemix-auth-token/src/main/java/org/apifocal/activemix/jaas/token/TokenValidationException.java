@@ -19,8 +19,9 @@ package org.apifocal.activemix.jaas.token;
  * Exception raised when token fails a validation.
  */
 public class TokenValidationException extends Exception {
+	private static final long serialVersionUID = 1L;
 
-    public TokenValidationException(String message) {
+	public TokenValidationException(String message) {
         super(message);
     }
 
