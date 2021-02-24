@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 apifocal LLC. All rights reserved.
+ * Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.commons;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.JWT;
 
-    verifiers.package="org.apifocal.activemix.jaas.commons.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+/**
+ * TODO: javadoc
+ */
+public interface TokenValidator<T extends JWT, C extends SecurityContext> {
 
-    claimMappers.package="org.apifocal.activemix.jaas.commons.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+    void validate(T token, C securityContext) throws TokenValidationException;
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+}

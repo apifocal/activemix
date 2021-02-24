@@ -32,6 +32,11 @@ limitations under the License.
 
     <dependencies>
         <dependency>
+            <groupId>org.apifocal.activemix.jaas</groupId>
+            <artifactId>activemix-auth-commons</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-jaas</artifactId>
         </dependency>

@@ -36,10 +36,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apifocal.activemix.jaas.token.Settings;
-import org.apifocal.activemix.jaas.token.TokenValidationException;
-import org.apifocal.activemix.jaas.token.Tokens;
-import org.apifocal.activemix.jaas.token.verifiers.TokenSignerValidator;
+import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.jaas.commons.TokenValidationException;
+import org.apifocal.activemix.jaas.commons.Tokens;
+import org.apifocal.activemix.jaas.commons.verifiers.TokenSignerValidator;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;

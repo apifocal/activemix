@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 apifocal LLC. All rights reserved.
+ * Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.commons;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+/**
+ * Exception raised when token fails a validation.
+ */
+public class TokenValidationException extends Exception {
+	private static final long serialVersionUID = 1L;
 
-    verifiers.package="org.apifocal.activemix.jaas.commons.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+	public TokenValidationException(String message) {
+        super(message);
+    }
 
-    claimMappers.package="org.apifocal.activemix.jaas.commons.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+    public TokenValidationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+}

@@ -66,12 +66,22 @@ limitations under the License.
             <!-- activemix project artifacts -->
             <dependency>
                 <groupId>org.apifocal.activemix.jaas</groupId>
+                <artifactId>activemix-auth-escalate</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apifocal.activemix.jaas</groupId>
                 <artifactId>activemix-auth-token</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apifocal.activemix.jaas</groupId>
                 <artifactId>activemix-auth-token-spring</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apifocal.activemix.jaas</groupId>
+                <artifactId>activemix-auth-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
