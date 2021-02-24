@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 apifocal LLC. All rights reserved.
+ * Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.commons;
 
-TokenLogin {
-    org.apifocal.activemix.jaas.token.TokenLoginModule required
-    debug=true
-    userAsTenant=true
+import com.nimbusds.jwt.JWTClaimsSet;
 
-    verifiers.package="org.apifocal.activemix.jaas.commons.verifiers"
-    verifiers.classes="TokenSignatureValidator,TokenSignerValidator"
+import java.security.Principal;
+import java.util.Set;
 
-    claimMappers.package="org.apifocal.activemix.jaas.commons.mappers"
-    claimMappers.classes="SubjectMapper, IssuerMapper"
+/**
+ * A mapper which turns JWT claims into JAAS principals.
+ */
+public interface ClaimMapper {
 
-    verifiers.TokenSignerValidator.keys="src/test/resources/keys";
-};
+    Set<Principal> map(JWTClaimsSet claimsSet);
+
+}

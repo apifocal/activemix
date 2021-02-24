@@ -20,7 +20,11 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
-import org.apifocal.activemix.jaas.token.verifiers.nimbus.TokenSecurityContext;
+import org.apifocal.activemix.jaas.commons.ClaimMapper;
+import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.jaas.commons.TokenValidationException;
+import org.apifocal.activemix.jaas.commons.TokenValidator;
+import org.apifocal.activemix.jaas.commons.verifiers.TokenSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

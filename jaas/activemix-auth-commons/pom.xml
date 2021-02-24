@@ -24,18 +24,13 @@ limitations under the License.
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>activemix-auth-escalate</artifactId>
+    <artifactId>activemix-auth-commons</artifactId>
     <packaging>jar</packaging>
 
-    <name>ActiveMix - JAAS Escalate</name>
-    <description>JAAS LoginModule using escalation</description>
+    <name>ActiveMix - JAAS Commons</name>
+    <description>Components for JAAS based authentication</description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apifocal.activemix.jaas</groupId>
-            <artifactId>activemix-auth-commons</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-jaas</artifactId>

@@ -13,31 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apifocal.activemix.tools.token;
-
-import java.io.Console;
+package org.apifocal.activemix.jaas.commons;
 
 import org.apifocal.activemix.jaas.commons.PasswordProvider;
 
-import com.google.common.base.Strings;
+public final class InsecurePasswordProvider implements PasswordProvider {
+    public static final String DEFAULT_INSECURE_PASSWORD = "secret";
 
-public final class StdinPasswordProvider implements PasswordProvider {
+    private final String password;
 
-    private final String key;
-    
-    public StdinPasswordProvider(String key) {
-        this.key = Strings.nullToEmpty(key);
+    public InsecurePasswordProvider() {
+        this(DEFAULT_INSECURE_PASSWORD);
+    }
+    public InsecurePasswordProvider(String password) {
+        this.password = password;
     }
     
     public String getPassword() {
-        String password = "";
-        try {
-            Console console = System.console();
-            // TODO: use the format version vs just concatenating strings?
-            password = console != null ? new String(console.readPassword("Enter passphrase for " + key + ": ")) : password;
-        } catch (Exception ex) {
-            // LOG
-        }
         return password;
     }
 

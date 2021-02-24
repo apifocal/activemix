@@ -33,6 +33,7 @@ limitations under the License.
     <description>JASS LoginModule(s) using JWT tokens</description>
 
     <modules>
+        <module>activemix-auth-commons</module>
         <module>activemix-auth-escalate</module>
         <module>activemix-auth-token</module>
         <module>activemix-auth-token-spring</module>

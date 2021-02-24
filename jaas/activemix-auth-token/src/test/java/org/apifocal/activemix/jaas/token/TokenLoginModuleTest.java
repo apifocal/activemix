@@ -27,8 +27,8 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
-import org.apifocal.activemix.jaas.token.mappers.IssuerPrincipal;
-import org.apifocal.activemix.jaas.token.mappers.SubjectPrincipal;
+import org.apifocal.activemix.jaas.commons.IssuerPrincipal;
+import org.apifocal.activemix.jaas.commons.SubjectPrincipal;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
