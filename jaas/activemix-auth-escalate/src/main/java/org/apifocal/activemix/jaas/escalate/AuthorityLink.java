@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 apifocal LLC. All rights reserved.
+ * Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apifocal.activemix.jaas.escalate;
 
-EscalateLogin {
-    org.apifocal.activemix.jaas.escalate.EscalateLoginModule required
-    debug=true
 
-    broker=broker1
-    authority.name=example
-    authority.link.class=org.apifocal.activemix.jaas.escalate.NoopAuthorityLink;
-};
+/**
+ * Authentication Authority client
+ */
+public interface AuthorityLink {
+
+    void initialize(String broker, String authority);
+
+    void verify(String credential);
+    
+}

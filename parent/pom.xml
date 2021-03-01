@@ -53,6 +53,7 @@ limitations under the License.
         <logback.version>1.2.3</logback.version>
         <metrics.version>4.1.5</metrics.version>
         <mockito.version>3.3.3</mockito.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <snakeyaml.version>1.26</snakeyaml.version>
         <springframework.version>5.2.5.RELEASE</springframework.version>
         <swagger.version>2.0.0-rc2</swagger.version>
@@ -230,6 +231,11 @@ limitations under the License.
             </dependency>
 
             <!-- Logging dependencies -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>

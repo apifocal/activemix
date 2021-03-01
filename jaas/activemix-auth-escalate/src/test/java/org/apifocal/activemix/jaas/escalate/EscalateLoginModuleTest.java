@@ -58,6 +58,8 @@ public class EscalateLoginModuleTest {
             context.login();
         } catch(LoginException e) {
             fail("Unexpected error during login call " + e);
+        } finally {
+            // context.logout();
         }
 
         Subject subject = context.getSubject();
