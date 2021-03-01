@@ -31,6 +31,7 @@ import javax.security.auth.spi.LoginModule;
 
 import org.apifocal.activemix.jaas.commons.IssuerPrincipal;
 import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.jaas.commons.SettingsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,12 +45,20 @@ public class EscalateLoginModule implements LoginModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(EscalateLoginModule.class);
 
+    public static final String SETTING_BROKER = "broker";
+    public static final String SETTING_AUTHORITY_NAME = "authority.name";
+    public static final String SETTING_AUTHORITY_LINK = "authority.link.class";
+
     private CallbackHandler callbackHandler;
     private Subject subject;
     private final Set<Principal> principals = Sets.newConcurrentHashSet();
 
     private Settings settings;
     private boolean verbose;
+
+    private String broker;
+    private String authority;
+    private AuthorityLink link;
 
 
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
@@ -59,6 +68,17 @@ public class EscalateLoginModule implements LoginModule {
         settings = new Settings(options);
 
         verbose = settings.booleanOption("debug");
+        broker = settings.stringOption(SETTING_BROKER, "");
+        authority = settings.stringOption(SETTING_AUTHORITY_NAME, "");
+        String authorityLink = settings.stringOption(SETTING_AUTHORITY_LINK, "");
+
+        LOG.debug("Creating AuthorityLink of type '{}'", authorityLink);
+        link = SettingsBuilder.create(SettingsBuilder.load("", authorityLink, AuthorityLink.class, getClass().getClassLoader()).get(), settings);
+        if (link == null) {
+            throw new IllegalStateException("Failed to create AuthorityLink of type " + authorityLink);
+        }
+        LOG.debug("Initializing AuthorityLink to broker='{}', authority='{}'", broker, authority);
+        link.initialize(broker, authority);
     }
 
     public boolean login() throws LoginException {

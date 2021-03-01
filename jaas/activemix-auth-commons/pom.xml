@@ -32,10 +32,6 @@ limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-jaas</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
@@ -53,10 +49,14 @@ limitations under the License.
             <artifactId>bcpkix-jdk15on</artifactId>
             <version>[1.52,)</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
         <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -47,7 +47,10 @@ public final class SettingsBuilder {
             .collect(Collectors.toList());
     }
 
-    private static <T> T create(Class<T> typeClass, Settings settings) {
+    public static <T> T create(Class<T> typeClass, Settings settings) {
+    	if (typeClass == null) {
+            return null;
+    	}
         try {
             Constructor<T> constructor = typeClass.getConstructor(Settings.class);
             return constructor.newInstance(settings);
