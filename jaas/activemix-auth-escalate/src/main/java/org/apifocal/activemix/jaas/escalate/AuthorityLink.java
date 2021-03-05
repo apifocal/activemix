@@ -23,6 +23,6 @@ public interface AuthorityLink {
 
     void initialize(String broker, String authority);
 
-    void verify(String credential);
+    boolean verify(String user, String credential);
     
 }

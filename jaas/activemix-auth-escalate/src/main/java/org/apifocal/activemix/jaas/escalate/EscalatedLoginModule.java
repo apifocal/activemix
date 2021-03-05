@@ -17,6 +17,7 @@ package org.apifocal.activemix.jaas.escalate;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,18 +33,22 @@ import javax.security.auth.spi.LoginModule;
 import org.apifocal.activemix.jaas.commons.IssuerPrincipal;
 import org.apifocal.activemix.jaas.commons.Settings;
 import org.apifocal.activemix.jaas.commons.SettingsBuilder;
+import org.apifocal.activemix.jaas.commons.Tokens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
+import com.nimbusds.jwt.SignedJWT;
 
 /**
  * TODO: Doc
  * 
  */
-public class EscalateLoginModule implements LoginModule {
+public class EscalatedLoginModule implements LoginModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EscalateLoginModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EscalatedLoginModule.class);
+    private static final String[] LOCAL_DOMAINS = new String[]{"local", "example"};
 
     public static final String SETTING_BROKER = "broker";
     public static final String SETTING_AUTHORITY_NAME = "authority.name";
@@ -55,6 +60,7 @@ public class EscalateLoginModule implements LoginModule {
 
     private Settings settings;
     private boolean verbose;
+    private boolean acceptAnonymous = false;
 
     private String broker;
     private String authority;
@@ -94,10 +100,9 @@ public class EscalateLoginModule implements LoginModule {
         }
 
         String user = ncb.getName();
-        char[] token = pcb.getPassword();
+        char[] password = pcb.getPassword();
 
-        // escalate identity check to authority service
-        return true;
+        return verifyCredential(user, new String(password));
     }
 
     public boolean commit() throws LoginException {
@@ -116,4 +121,47 @@ public class EscalateLoginModule implements LoginModule {
         // if (verbose)...LOG.debug("logout");
         return true;
     }
+
+    protected boolean verifyCredential(String user, String credential) {
+    	// FIXME: avoid the need to generate proper tokens for now, just assume all credentials are this dummy token
+    	//  that gets us over the 'no text passwords allowed' exception
+    	credential = 
+            "eyJhbGciOiJSUzI1NiJ9." +
+            "eyJzdWIiOiJmb28iLCJpc3MiOiJiYXIifQ." +
+            "WQl3XKlooF-wIYK3ibYyT5AueKN9TSulBLoIdyj90sXmU9boa5yUCVHrdRI5BgC1Ep0RHbAlxGO1-e_5Z-yY81Li-wvf0MIg6jbQgQOJ1IDrDcfLS8VvnHqI5bpk5BhFaRkIQsyCvz7zbKGLqzTuI3VFvjUT6CJwSGhWdt19aJei2FiIZ6iPasVBfdZyJNmCxcKAZKdLlG2GWmXMYomVjSkitxM1SsjWGtu68ANKkkkUjdOoU-Q7v9hLb9Pa9VMIZoAQV4l__lvA-1lD2d11ezXa0I7nnoGri193Lvg1gBUtw7zzxr3Gmy0vSyjN4hegwXqvyBSIWW9sESaPYVyY2PIgMiFxJRhylqERcKOcT8Y8E43DYYkX5SdOsmwoOmScMZH7qoZfkWtMFc2rV72JyyCbjy16U-rjVFU-7hW8x3aaNEfMiXpJWaT9fU7yQYWmUO7w9TvzpH2YW3zX3qR-b9_pZaUBQvppzJmqY-_JTSR375gI3rMNS6mPHMEkMDORE1CuN7A138tXOypV3JvB3lV6AQeYMMBgepefxPwakj8A5LDDFpsiYbBRun3MHRvh8oAlr6xKzhogtbiUYo2-RG8LSEcToNpdbPqwJHCV7BtGSnfCHzI3ZsdvC9-Q4W0UwAxUpNEsgRkd178sMLuF4Ir1XwGzH05VXYKBKY0r2uY";
+
+        return Tokens.isJwtToken(credential)
+            ? verifyJwtCredential(user, credential) 
+            : verifyTextCredential(user, credential);
+    }
+
+    protected boolean verifyTextCredential(String user, String credential) {
+        LOG.warn("Plain text passwords not accepted for user='{}'", user);
+        return false;
+    }
+
+    protected boolean verifyJwtCredential(String user, String credential) {
+        boolean local = authenticateLocally(user);
+        return local ? localTokenVerification(user, credential) : escalateTokenVerification(user, credential);
+    }
+
+    protected boolean authenticateLocally(String user) {
+    	// Local users use an email format model. Predefined 'domains' MUST be handled locally...
+    	String[] parts = user.split("@");
+    	if (parts.length == 2 && Arrays.stream(LOCAL_DOMAINS).anyMatch(parts[1]::equals)) {
+            LOG.warn("Credential verification for user='{}' must be done locally.", user);
+    		return true;
+    	}
+    	return false;
+    }
+
+    protected boolean localTokenVerification(String user, String credential) {
+    	// FIXME: for now assume all local tokens are ok; defer to local token checks
+        return true;
+    }
+
+    protected boolean escalateTokenVerification(String user, String credential) {
+        return link.verify(user, credential);
+    }
+
 }

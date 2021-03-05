@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import com.google.common.io.Resources;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -43,12 +45,27 @@ public final class Tokens {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tokens.class);
 
+    public static SignedJWT parseToken(String credential) {
+    	try {
+			return Strings.isNullOrEmpty(credential) ? null : SignedJWT.parse(credential);
+		} catch (ParseException e) {
+			LOG.trace("Not a JWT token '{}': '{}'", credential, e.getMessage());
+		}
+    	return null;
+    }
+
+    public static boolean isJwtToken(String credential) {
+        return parseToken(credential) != null;
+    }
+
     public static String fromFile(String file) throws IOException {
-        return firstContentLine(new String(Files.readAllBytes(Paths.get(file))));
+        String token = firstContentLine(new String(Files.readAllBytes(Paths.get(file))));
+        return isJwtToken(token) ? token : null;
     }
 
     public static String fromResource(String resource) throws IOException {
-        return firstContentLine(Resources.toString(Resources.getResource(resource), Charsets.UTF_8));
+    	String token = firstContentLine(Resources.toString(Resources.getResource(resource), Charsets.UTF_8));
+        return isJwtToken(token) ? token : null;
     }
 
     private static String firstContentLine(String text) {

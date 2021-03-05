@@ -28,7 +28,8 @@ public class NoopAuthorityLink implements AuthorityLink {
     public void initialize(String broker, String authority) {
     }
 
-    public void verify(String credential) {
+    public boolean verify(String user, String credential) {
+    	return true;
     }
     
 }
