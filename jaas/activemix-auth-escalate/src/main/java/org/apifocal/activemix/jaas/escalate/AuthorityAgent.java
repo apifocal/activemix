@@ -27,6 +27,7 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.util.ServiceStopper;
 import org.apache.activemq.util.ServiceSupport;
+import org.apifocal.activemix.jaas.commons.Destinations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,8 +58,8 @@ public class AuthorityAgent extends ServiceSupport {
 		LOG.debug("Starting AuthorityAgent for the '{}' authority", authority);
         connection = connectionFactory.createConnection("whocares@local", "FIXME");
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        dnRequests = session.createQueue(dnAuthRequest(authority));
-        dnReplies = session.createQueue(dnAuthReply(authority));
+        dnRequests = createDestination(session, dnAuthRequest(authority));
+        dnReplies = createDestination(session, dnAuthReply(authority));
 
         connection.start();
 	}
@@ -77,6 +78,18 @@ public class AuthorityAgent extends ServiceSupport {
 		}
 	}
 
+    public static Destination createDestination(Session s, String dn) throws JMSException {
+        if (dn == null) {
+            throw new IllegalArgumentException("Destination name cannot be 'null'");
+        }
+        if (dn.startsWith("queue:")) {
+            return s.createQueue(Destinations.trimPrefix(Destinations.trimPrefix(dn, "queue:"), "//"));
+        } else if (dn.startsWith("topic:")) {
+            return s.createTopic(Destinations.trimPrefix(Destinations.trimPrefix(dn, "topic:"), "//"));
+        }
+        return null;
+    }
+
 	public boolean verify(String user, String credential) {
 		LOG.info("Escalating credential verification for user '{}' to '{}'", user, dnRequests.toString());
 		try {
@@ -93,12 +106,12 @@ public class AuthorityAgent extends ServiceSupport {
 
 	// TODO: should we refactor this out of here? maybe some helper class?
 	private static String dnAuthRequest(String authority) {
-		return "_" + authority + ".verify";
+		return Destinations.fromUrn("urn:" + authority + ":verify");
 	}
 
 	// TODO: should we refactor this out of here? maybe some helper class?
 	private static String dnAuthReply(String authority) {
-		return "_" + authority + ".verify";
+		return Destinations.fromUrn("urn:" + authority + ":verify");
 	}
 
 }

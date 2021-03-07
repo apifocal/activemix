@@ -33,6 +33,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.command.ActiveMQTextMessage;
+import org.apifocal.activemix.jaas.commons.Destinations;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -79,7 +80,8 @@ public class AuthorityLinkRequestsTest {
     public void setupAuthConnection() throws Exception {
         authConnection = authConnectionFactory.createConnection("aa@local", AA_TOKEN);
         Session session = authConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        MessageConsumer consumer = session.createConsumer(session.createQueue("_example.verify"));
+        MessageConsumer consumer = session.createConsumer(
+            AuthorityAgent.createDestination(session, Destinations.fromUrn("urn:example:verify")));
         consumer.setMessageListener(new MessageListener() {
             @Override
             public void onMessage(javax.jms.Message message) {

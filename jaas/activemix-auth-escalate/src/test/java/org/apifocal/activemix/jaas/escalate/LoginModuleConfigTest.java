@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Resources;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 /**
