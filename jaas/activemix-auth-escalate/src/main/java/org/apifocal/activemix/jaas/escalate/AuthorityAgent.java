@@ -20,11 +20,14 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.activemq.util.ServiceStopper;
 import org.apache.activemq.util.ServiceSupport;
 import org.apifocal.activemix.jaas.commons.Destinations;
@@ -43,6 +46,7 @@ public class AuthorityAgent extends ServiceSupport {
 
 	private Connection connection;
 	private Session session;
+	private MessageConsumer consumer;
 	private Destination dnRequests;
 	private Destination dnReplies; // how do we know this is unique?
 
@@ -60,6 +64,20 @@ public class AuthorityAgent extends ServiceSupport {
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         dnRequests = createDestination(session, dnAuthRequest(authority));
         dnReplies = createDestination(session, dnAuthReply(authority));
+
+        consumer = session.createConsumer(
+            AuthorityAgent.createDestination(session, Destinations.fromUrn("urn:isignal-broker1:example-reply")));
+        consumer.setMessageListener(new MessageListener() {
+            @Override
+            public void onMessage(javax.jms.Message message) {
+                // TODO: use correlation IDs
+                try {
+                    LOG.debug("AGENT received message from stream: {}", ((ActiveMQTextMessage)message).getText());
+                } catch (JMSException e) {
+                    LOG.debug("Error reading message: {}", e.getMessage());
+                }
+            }
+        });
 
         connection.start();
 	}
@@ -94,8 +112,9 @@ public class AuthorityAgent extends ServiceSupport {
 		LOG.info("Escalating credential verification for user '{}' to '{}'", user, dnRequests.toString());
 		try {
 			MessageProducer producer = session.createProducer(dnRequests);
-	        producer.send(session.createTextMessage(user));
-	        Thread.sleep(200);
+			TextMessage request = session.createTextMessage(user);
+			request.setJMSReplyTo(dnReplies);
+	        producer.send(request);
 		} catch (Exception e) {
 			LOG.warn("FAILED");
 		}
@@ -111,7 +130,7 @@ public class AuthorityAgent extends ServiceSupport {
 
 	// TODO: should we refactor this out of here? maybe some helper class?
 	private static String dnAuthReply(String authority) {
-		return Destinations.fromUrn("urn:" + authority + ":verify");
+		return Destinations.fromUrn("urn:isignal-broker1:" + authority + "-reply");
 	}
 
 }

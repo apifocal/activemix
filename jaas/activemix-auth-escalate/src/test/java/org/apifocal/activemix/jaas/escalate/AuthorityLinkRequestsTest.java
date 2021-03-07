@@ -79,7 +79,8 @@ public class AuthorityLinkRequestsTest {
     @Before
     public void setupAuthConnection() throws Exception {
         authConnection = authConnectionFactory.createConnection("aa@local", AA_TOKEN);
-        Session session = authConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        final Session session = authConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        final MessageProducer responder = session.createProducer(null);
         MessageConsumer consumer = session.createConsumer(
             AuthorityAgent.createDestination(session, Destinations.fromUrn("urn:example:verify")));
         consumer.setMessageListener(new MessageListener() {
@@ -87,6 +88,8 @@ public class AuthorityLinkRequestsTest {
             public void onMessage(javax.jms.Message message) {
                 try {
                     LOG.debug("Authority received message from stream: {}", ((ActiveMQTextMessage)message).getText());
+                    LOG.debug("  reply-to: '{}\'", message.getJMSReplyTo().toString());
+                    responder.send(message.getJMSReplyTo(), session.createTextMessage("OK"));
                 } catch (JMSException e) {
                     LOG.debug("Error reading message: {}", e.getMessage());
                 }
@@ -120,7 +123,7 @@ public class AuthorityLinkRequestsTest {
         MessageProducer producer = session.createProducer(session.createQueue(DEFAULT_QUEUE));
         // producer.send(session.createTextMessage("QQQ: $1000.00"));
 
-        Thread.sleep(500);
+        Thread.sleep(2000);
         connection.stop();
 
     }
@@ -146,6 +149,7 @@ public class AuthorityLinkRequestsTest {
                     LOG.debug("Listener '{}' received user message from stream: {}", id, ((ActiveMQTextMessage)message).getDestination().getPhysicalName());
                     LOG.debug("  message-id: \"{}\"content: \"{}\".",
                         message.getJMSMessageID().toString(), ((ActiveMQTextMessage)message).getText());
+                    LOG.debug("  reply-to: '{}\'", message.getJMSReplyTo().toString());
                     if (latch != null) {
                         latch.countDown();
                     }
