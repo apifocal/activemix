@@ -56,6 +56,7 @@ limitations under the License.
         <slf4j.version>1.7.25</slf4j.version>
         <snakeyaml.version>1.26</snakeyaml.version>
         <springframework.version>5.2.5.RELEASE</springframework.version>
+		<maven-surefire.version>2.22.1</maven-surefire.version>
         <swagger.version>2.0.0-rc2</swagger.version>
         <swagger-maven-plugin-version>3.1.5</swagger-maven-plugin-version>
         <velocity.version>1.7</velocity.version>
@@ -430,7 +431,12 @@ limitations under the License.
                     <artifactId>maven-plugin-plugin</artifactId>
                     <version>${maven-plugin-plugin.version}</version>
                 </plugin>
-                <!-- swagger.json - generate API documentation -->
+                <plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire.version}</version>
+                </plugin>
+				<!-- swagger.json - generate API documentation -->
                 <plugin>
                     <groupId>com.github.kongchen</groupId>
                     <artifactId>swagger-maven-plugin</artifactId>
