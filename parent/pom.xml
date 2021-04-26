@@ -39,7 +39,7 @@ limitations under the License.
         <commons.digester.version>1.8.1</commons.digester.version>
         <commons.lang.version>2.6</commons.lang.version>
         <commons-lang3.version>3.9</commons-lang3.version>
-        <commons.io.version>2.6</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <commons.validator.version>1.6</commons.validator.version>
         <xbean.version>4.16</xbean.version>
         <nimbusds.version>8.11</nimbusds.version>
