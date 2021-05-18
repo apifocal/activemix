@@ -32,6 +32,10 @@ limitations under the License.
 
     <dependencies>
         <dependency>
+            <groupId>org.apifocal.activemix</groupId>
+            <artifactId>activemix-commons</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>

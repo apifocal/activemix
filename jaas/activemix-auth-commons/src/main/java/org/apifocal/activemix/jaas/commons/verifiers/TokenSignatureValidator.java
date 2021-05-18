@@ -15,7 +15,7 @@
  */
 package org.apifocal.activemix.jaas.commons.verifiers;
 
-import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.commons.Settings;
 import org.apifocal.activemix.jaas.commons.TokenValidationException;
 import org.apifocal.activemix.jaas.commons.TokenValidator;
 

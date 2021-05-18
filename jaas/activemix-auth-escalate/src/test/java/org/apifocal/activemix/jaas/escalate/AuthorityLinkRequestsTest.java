@@ -15,11 +15,9 @@
  */
 package org.apifocal.activemix.jaas.escalate;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -33,7 +31,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.apifocal.activemix.jaas.commons.Destinations;
+import org.apifocal.activemix.commons.Destinations;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -42,8 +40,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.io.Resources;
 
 /**
  * TODO: Doc
