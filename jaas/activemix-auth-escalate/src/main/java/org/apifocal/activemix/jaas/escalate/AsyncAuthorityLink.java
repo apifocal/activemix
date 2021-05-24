@@ -17,7 +17,7 @@ package org.apifocal.activemix.jaas.escalate;
 
 import org.apache.activemq.broker.BrokerRegistry;
 import org.apache.activemq.broker.BrokerService;
-import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.commons.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

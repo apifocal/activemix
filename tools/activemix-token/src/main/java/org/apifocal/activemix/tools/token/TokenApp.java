@@ -36,7 +36,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.commons.Settings;
 import org.apifocal.activemix.jaas.commons.TokenValidationException;
 import org.apifocal.activemix.jaas.commons.Tokens;
 import org.apifocal.activemix.jaas.commons.verifiers.TokenSignerValidator;

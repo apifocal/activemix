@@ -21,8 +21,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 import org.apifocal.activemix.jaas.commons.ClaimMapper;
-import org.apifocal.activemix.jaas.commons.Settings;
-import org.apifocal.activemix.jaas.commons.SettingsBuilder;
+import org.apifocal.activemix.commons.Settings;
+import org.apifocal.activemix.commons.SettingsBuilder;
 import org.apifocal.activemix.jaas.commons.TokenValidationException;
 import org.apifocal.activemix.jaas.commons.TokenValidator;
 import org.apifocal.activemix.jaas.commons.verifiers.TokenSecurityContext;
@@ -34,17 +34,12 @@ import javax.security.auth.callback.*;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * TODO: Doc

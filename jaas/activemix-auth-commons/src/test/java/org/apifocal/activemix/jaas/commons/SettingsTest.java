@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.commons.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 

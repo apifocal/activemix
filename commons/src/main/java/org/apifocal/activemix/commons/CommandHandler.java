@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2020 apifocal LLC. All rights reserved.
+ * Copyright 2017 apifocal LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apifocal.activemix.jaas.escalate;
-
-import org.apifocal.activemix.commons.Settings;
+package org.apifocal.activemix.commons;
 
 /**
- * Authentication Authority client
+ * TODO: doc
  */
-public class NoopAuthorityLink implements AuthorityLink {
-	
-	public NoopAuthorityLink(Settings settings) {
-	}
+public interface CommandHandler {
 
-    public void initialize(String broker, String authority) {
-    }
+    public void execute(String command);
 
-    public boolean verify(String user, String credential) {
-    	return true;
-    }
-    
 }
+    

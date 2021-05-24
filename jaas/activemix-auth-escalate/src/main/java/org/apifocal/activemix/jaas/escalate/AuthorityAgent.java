@@ -30,7 +30,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.activemq.util.ServiceStopper;
 import org.apache.activemq.util.ServiceSupport;
-import org.apifocal.activemix.jaas.commons.Destinations;
+import org.apifocal.activemix.commons.Destinations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

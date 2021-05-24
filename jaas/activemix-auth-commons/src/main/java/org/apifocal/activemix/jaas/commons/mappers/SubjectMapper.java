@@ -21,7 +21,8 @@ import java.security.Principal;
 import java.util.Collections;
 import java.util.Set;
 
-import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.commons.Settings;
+
 import org.apifocal.activemix.jaas.commons.SubjectPrincipal;
 import org.apifocal.activemix.jaas.commons.ClaimMapper;
 

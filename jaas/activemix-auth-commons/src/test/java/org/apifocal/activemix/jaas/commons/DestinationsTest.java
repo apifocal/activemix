@@ -15,6 +15,7 @@
  */
 package org.apifocal.activemix.jaas.commons;
 
+import org.apifocal.activemix.commons.Destinations;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

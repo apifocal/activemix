@@ -17,7 +17,8 @@ package org.apifocal.activemix.jaas.commons.verifiers;
 
 import java.io.File;
 
-import org.apifocal.activemix.jaas.commons.Settings;
+import org.apifocal.activemix.commons.Settings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
