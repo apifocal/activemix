@@ -41,7 +41,7 @@ limitations under the License.
         <commons-lang3.version>3.9</commons-lang3.version>
         <commons.io.version>2.7</commons.io.version>
         <commons.validator.version>1.6</commons.validator.version>
-        <commons.configuration2.version>2.2</commons.configuration2.version>
+        <commons.configuration2.version>2.7</commons.configuration2.version>
 
         <xbean.version>4.16</xbean.version>
         <nimbusds.version>8.11</nimbusds.version>
