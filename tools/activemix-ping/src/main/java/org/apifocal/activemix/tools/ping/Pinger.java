@@ -183,7 +183,10 @@ public class Pinger {
     }
 
     protected static Connection createConnection(ConnectionFactory cf, String user, String pass) throws JMSException {
-        return (user != null && !user.isEmpty()) ? cf.createConnection(user,pass) : cf.createConnection();
+        if (user != null && !user.isEmpty()) {
+            return cf.createConnection(user,pass);
+        }
+        return cf.createConnection();
     }
 
     protected static Destination createDestination(Session s, String dn) throws JMSException {
