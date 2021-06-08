@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# example ./amx ping tcp://localhost:61616 queue:jms.test.ping -c 3
+
 realpath() {
   READLINK_EXISTS=$(command -v readlink &> /dev/null)
   if [ -z $READLINK_EXISTS ]; then
@@ -131,12 +133,12 @@ run() {
                 shift
                 ;;
             'ping')
-                MAIN=org.apifocal.activemx.tools.ping.PingApp
+                MAIN=org.apifocal.activemix.tools.ping.PingApp
                 ARGS="$ARGS"
                 shift
                 ;;
             'token')
-                MAIN=org.apifocal.activemx.tools.token.TokenApp
+                MAIN=org.apifocal.activemix.tools.token.TokenApp
                 ARGS="$ARGS"
                 shift
                 ;;

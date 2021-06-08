@@ -39,24 +39,33 @@ public class PingApp {
 
     private static final Option OPTION_HELP = Option
         .builder("h").longOpt("help").build();
+
     private static final Option OPTION_USER = Option
         .builder("u").longOpt("user").desc("User for JMS connection").hasArg(true).argName("user").build();
+
     private static final Option OPTION_PASS = Option
         .builder("p").longOpt("password").desc("Password for JMS connection").hasArg(true).argName("pass").build();
+
     private static final Option OPTION_LEN = Option
         .builder("l").longOpt("length").desc("Send message of 'len' bytes with random content").hasArg(true).argName("len").build();
+
     private static final Option OPTION_COUNT = Option
         .builder("c").desc("Stop after sending 'count' messages.").hasArg(true).argName("count").build();
+
     private static final Option OPTION_INTERVAL = Option
         .builder("i").desc("Wait 'interval' seconds between sending messages").hasArg(true).argName("interval").build();
+
     private static final Option OPTION_ASYNC = Option
         .builder("a").longOpt("async").desc("Send next ping before receiving reply").hasArg(false).build();
+
     private static final Option OPTION_NOTHROTTLE = Option
         .builder().longOpt("no-throttle").desc("[NO HELP] Saturate broker; use with care!").build();
+
     private static final Option OPTION_TTL = Option
         .builder().longOpt("ttl").desc("[NO HELP] Message expiration time").hasArg(true).argName("ttl").build();
 
     private static final Options OPTIONS = new Options();
+
     private static final Option[] OPTIONS_LIST = {
         OPTION_HELP,
         OPTION_USER,
@@ -68,19 +77,20 @@ public class PingApp {
         OPTION_NOTHROTTLE,
         OPTION_TTL,
     };
+
     private static final String OPTIONS_FOOTER = "\n"
         + " broker-url             JMS connection URL\n"
         + " destination            JMS destination (either queue or topic) as url\n"
         + "                        (e.g. \"queue://queue.name\" \"topic://topic.name\")\n"
         + "                        default: \"queue://jms.ping.<random>\"\n\n"
         + "For more information visit https://docs.silkmq.com";
+
     static {
-        Arrays.asList(OPTIONS_LIST).forEach(o -> {
-            OPTIONS.addOption(o);
-        });
-    };
+        Arrays.asList(OPTIONS_LIST).forEach(OPTIONS::addOption);
+    }
 
     public static void main(String[] args) {
+        // example args -> tcp://localhost:61616 queue:jms.test.ping -c 3
         //cleanup
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -111,7 +121,14 @@ public class PingApp {
         }
 
         List<String> params = cli.getArgList();
-        String dn = params.size() > 1 ? params.get(1) : DEFAULT_PING_DESTINATION;
+
+        String dn;
+        if(params.size() > 1) {
+            dn = params.get(1);
+        } else {
+            dn = DEFAULT_PING_DESTINATION;
+        }
+
         Pinger pinger = new Pinger(params.get(0), dn);
         pinger.credentials(cli.getOptionValue("u"), cli.getOptionValue("p"));
         int len = 100;
