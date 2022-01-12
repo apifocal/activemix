@@ -57,7 +57,7 @@ limitations under the License.
         <mockito.version>3.3.3</mockito.version>
         <slf4j.version>1.7.25</slf4j.version>
         <snakeyaml.version>1.26</snakeyaml.version>
-        <springframework.version>5.2.5.RELEASE</springframework.version>
+        <springframework.version>5.3.14</springframework.version>
 		<maven-surefire.version>2.22.1</maven-surefire.version>
         <swagger.version>2.0.0-rc2</swagger.version>
         <swagger-maven-plugin-version>3.1.5</swagger-maven-plugin-version>
